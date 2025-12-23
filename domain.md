@@ -173,6 +173,77 @@ https://example.com
 
 ---
 
+## Q: "Gimana kalau ada 5 domain & 5 website Django beda di 1 VM?"
+
+Jawabannya: **BISA BANGET**. Itu nama teknisnya **Virtual Hosting**.
+
+> **Ilustrasi:**
+> 1 VM
+> 1 IP Publik
+> 5 Domain beda
+> 5 Aplikasi Django jalan di port beda (8001, 8002, 8003, dst)
+
+### Arsitektur Multi-Domain
+
+```
+Domain A ──┐
+Domain B ──┼──► IP VM (NGINX) ──┬──► Django A (Port 8001)
+Domain C ──┘                    ├──► Django B (Port 8002)
+                                └──► Django C (Port 8003)
+```
+
+### Caranya:
+
+#### 1. Jalankan tiap Django di port beda
+```bash
+# App 1
+python manage.py runserver 127.0.0.1:8001
+
+# App 2
+python manage.py runserver 127.0.0.1:8002
+
+# App 3
+python manage.py runserver 127.0.0.1:8003
+```
+
+#### 2. Buat Config Nginx terpisah buat tiap domain
+Contoh `/etc/nginx/sites-available/app1`:
+```nginx
+server {
+    listen 80;
+    server_name domain1.com;
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+    }
+}
+```
+
+Contoh `/etc/nginx/sites-available/app2`:
+```nginx
+server {
+    listen 80;
+    server_name domain2.com;
+    location / {
+        proxy_pass http://127.0.0.1:8002;
+    }
+}
+```
+
+#### 3. Aktifkan semua
+```bash
+sudo ln -s /etc/nginx/sites-available/app1 /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/app2 /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+#### 4. HTTPS Massal
+```bash
+sudo certbot --nginx -d domain1.com -d domain2.com -d domain3.com
+```
+
+---
+
 ## RANGKUMAN CEPAT (REALITA)
 
 | Pertanyaan                              | Jawaban             |
