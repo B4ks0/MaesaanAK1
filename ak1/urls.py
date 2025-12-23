@@ -23,4 +23,5 @@ urlpatterns = [
     path('pendaftaran/', include('pendaftaran.urls')),
     path('adminpanel/', include('adminpanel.urls')),
     path('pencaker/', include('pencaker.urls')),
+    path('captcha/', include('captcha.urls')),
 ]

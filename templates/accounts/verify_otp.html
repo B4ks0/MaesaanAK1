@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}Verifikasi OTP - MAESAAN{% endblock %}
+
+{% block content %}
+<div class="card fade-in-up" style="max-width: 450px; margin: 0 auto; margin-top: 50px;">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="card-title">Verifikasi Email</div>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <p style="text-align: center; color: #666; margin-bottom: 10px;">
+            Kode OTP telah dikirim ke email Anda.
+        </p>
+        <p style="text-align: center; color: #666; font-size: 0.9em;">
+            Silakan cek inbox atau folder spam untuk kode 6 digit.
+        </p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="form-section">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-key"></i> Masukkan Kode OTP
+                </label>
+                <div class="input-wrapper">
+                    <input type="text" name="otp" placeholder="Contoh: 123456" 
+                           maxlength="6" required autocomplete="off" 
+                           style="letter-spacing: 5px; text-align: center; font-size: 1.2em; font-weight: bold;">
+                    <i class="fas fa-check input-icon valid-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check-circle"></i>
+                <span>Verifikasi OTP</span>
+            </button>
+        </div>
+    </form>
+
+    <div class="auth-links">
+        <div class="divider">
+            <span>Salah Email?</span>
+        </div>
+        <a href="{% url 'register' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            <span>Daftar Ulang</span>
+        </a>
+    </div>
+</div>
+
+<style>
+/* Modern Form Styling */
+.form-section {
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    border: 1px solid #e8eaf6;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #37474f;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-label i {
+    margin-right: 8px;
+    color: #667eea;
+}
+
+/* Input Wrappers */
+.input-wrapper {
+    position: relative;
+    max-width: 250px;
+    margin: 0 auto;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Alert Styling */
+.alert {
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border-left: 4px solid;
+    text-align: center;
+    font-size: 0.95em;
+}
+
+.alert-success {
+    background: #e8f5e9;
+    border-left-color: #4caf50;
+    color: #2e7d32;
+}
+
+.alert-error, .alert-warning {
+    background: #ffebee;
+    border-left-color: #f44336;
+    color: #c62828;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    color: #37474f;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #e0e0e0 0%, #d0d0d0 100%);
+    transform: translateY(-1px);
+}
+
+/* Auth Links */
+.auth-links {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e8eaf6;
+}
+
+.divider {
+    position: relative;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.divider:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.divider span {
+    background: white;
+    padding: 0 15px;
+    color: #666;
+    font-size: 0.9em;
+    position: relative;
+    z-index: 1;
+}
+</style>
+{% endblock %}

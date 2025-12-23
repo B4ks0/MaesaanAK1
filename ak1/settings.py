@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'pendaftaran',
     'adminpanel',
     'pencaker',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -181,3 +182,12 @@ SESSION_COOKIE_AGE = 3600  # 1 hour
 MAX_UPLOAD_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880
+
+# Email Configuration
+# Real Email Backend (SMTP) Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'maesaanak1@gmail.com'
+EMAIL_HOST_PASSWORD = 'jrqb mysy qrpn isgs'  # Google App Password

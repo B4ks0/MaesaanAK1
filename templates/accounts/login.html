@@ -17,16 +17,23 @@
             <label class="form-label">
                 <i class="fas fa-envelope"></i> Email
             </label>
-            <input type="email" name="email" class="form-control" required
-                   placeholder="Masukkan email Anda">
+            <input type="email" name="email" class="form-control" required placeholder="Masukkan email Anda">
         </div>
 
         <div class="form-group">
             <label class="form-label">
                 <i class="fas fa-lock"></i> Password
             </label>
-            <input type="password" name="password" class="form-control" required
-                   placeholder="Masukkan password Anda">
+            <input type="password" name="password" class="form-control" required placeholder="Masukkan password Anda">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-shield-alt"></i> Keamanan
+            </label>
+            <div style="margin-bottom: 5px;">
+                {{ form.captcha }}
+            </div>
         </div>
 
         <button type="submit" class="btn btn-primary" style="width: 100%;">
