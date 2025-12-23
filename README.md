@@ -1,8 +1,26 @@
-# MaesaanAK1 - Sistem Pencari Kerja & Absensi dengan OCR AI
+# MaesaanAK1 - Sistem Pelayanan Disnaker & Absensi Digital
 
-Sistem integrasi OCR dan AI untuk otomatisasi data KTP pencari kerja dan manajemen absensi tamu. Project ini menggunakan **Django**, **Tesseract OCR**, dan **Google Gemini AI**.
+**MaesaanAK1** adalah aplikasi berbasis web yang dikembangkan untuk memodernisasi pelayanan di **Dinas Tenaga Kerja (Disnaker)**, khususnya dalam pembuatan Kartu Pencari Kerja (AK/1) dan pengelolaan Buku Tamu Digital.
 
-## 📋 Fitur Utama
+Aplikasi ini mengintegrasikan **Artificial Intelligence (AI)** dan **Optical Character Recognition (OCR)** untuk mempercepat proses input data masyarakat. Cukup dengan mengunggah foto KTP, formulir akan terisi secara otomatis.
+
+## 🌟 Fitur Unggulan Web
+
+### 1. Pelayanan Kartu Kuning (AK/1) Online
+- **Smart Form AK/1**: Pengisian data diri pencari kerja otomatis dari foto KTP.
+- **Validasi AI**: Menggunakan Google Gemini untuk memastikan akurasi data hasil scan.
+- **Upload Berkas**: Manajemen upload pas foto, ijazah, dan sertifikat dalam satu portal.
+
+### 2. Buku Tamu Digital (Smart Attendance)
+- **Scan & Log**: Tamu kantor cukup scan KTP atau isi form singkat.
+- **Real-time Dashboard**: Pantau jumlah kunjungan harian secara real-time.
+
+### 3. Teknologi Canggih
+- **Backend**: Django (Python) yang aman dan scalable.
+- **Vision AI**: Tesseract OCR engine + Gemini Generative AI.
+- **Dukungan Database**: MySQL untuk penyimpanan data skala besar.
+
+## 📋 Fitur Utama System
 - **Auto-Fill Data KTP**: Upload foto KTP, sistem otomatis mengisi form (NIK, Nama, TTL, Alamat, dll).
 - **AI-Powered Validation**: Menggunakan Google Gemini AI untuk memperbaiki hasil OCR yang kurang akurat.
 - **Manajemen Absensi**: Pencatatan tamu/absensi dengan validasi identitas.
