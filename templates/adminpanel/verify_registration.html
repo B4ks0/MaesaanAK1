@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}Verifikasi Pendaftaran - MAESAAN{% endblock %}
+
+{% block content %}
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        <div class="card-title">Verifikasi Pendaftaran AK1</div>
+    </div>
+    <p>Detail pendaftaran untuk verifikasi</p>
+</div>
+
+<!-- Registration Details -->
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="card-title">Data Pendaftar</div>
+    </div>
+
+    <div class="status-info">
+        <div class="status-item">
+            <div class="status-label">Nama Lengkap</div>
+            <div class="status-value">{{ registration.nama }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">NIK</div>
+            <div class="status-value">{{ registration.nik }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Tempat, Tanggal Lahir</div>
+            <div class="status-value">{{ registration.ttl }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Jenis Kelamin</div>
+            <div class="status-value">{{ registration.get_jk_display }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Status Perkawinan</div>
+            <div class="status-value">{{ registration.get_status_perkawinan_display }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Pendidikan</div>
+            <div class="status-value">{{ registration.pendidikan }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Alamat</div>
+            <div class="status-value">{{ registration.alamat }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Keahlian</div>
+            <div class="status-value">{{ registration.keahlian }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Pengalaman</div>
+            <div class="status-value">{{ registration.pengalaman|default:"Tidak ada" }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Email User</div>
+            <div class="status-value">{{ registration.user.email }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Tanggal Pendaftaran</div>
+            <div class="status-value">{{ registration.created_at|date:"d M Y H:i" }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Documents -->
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="card-title">Dokumen Pendukung</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <!-- Photo -->
+        <div style="text-align: center;">
+            <h4>Foto</h4>
+            {% if registration.photo_data %}
+                <img src="data:image/jpeg;base64,{{ registration.photo_data }}"
+                     style="max-width: 200px; max-height: 250px; border: 2px solid #f39c12; border-radius: 8px; margin: 10px 0;">
+            {% else %}
+                <div style="width: 200px; height: 250px; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 10px auto;">
+                    <i class="fas fa-user" style="font-size: 3em; color: #6c757d;"></i>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Ijazah -->
+        <div style="text-align: center;">
+            <h4>Ijazah/Dokumen</h4>
+            {% if registration.ijazah_data %}
+                <img src="data:image/jpeg;base64,{{ registration.ijazah_data }}"
+                     style="max-width: 200px; max-height: 250px; border: 2px solid #f39c12; border-radius: 8px; margin: 10px 0;">
+            {% else %}
+                <div style="width: 200px; height: 250px; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 10px auto;">
+                    <i class="fas fa-file-alt" style="font-size: 3em; color: #6c757d;"></i>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Verification Actions -->
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-gavel"></i>
+        </div>
+        <div class="card-title">Keputusan Verifikasi</div>
+    </div>
+
+    <form method="POST" id="verifyForm" style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+        {% csrf_token %}
+        <input type="hidden" id="actionInput" name="action" value="">
+        <p style="margin-bottom: 20px; font-weight: bold;">Apakah data pendaftaran ini valid dan lengkap?</p>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="comment" style="display: block; margin-bottom: 8px; font-weight: bold;">Komentar (opsional):</label>
+            <textarea name="comment" id="comment" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-family: Arial; font-size: 14px;" rows="3" placeholder="Tuliskan alasan penolakan atau catatan lainnya..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button type="submit" name="action" value="approve" class="btn btn-success btn-lg" id="approveBtn" style="padding: 12px 30px; font-weight: bold;">
+                <i class="fas fa-check-circle"></i> Setujui Pendaftaran
+            </button>
+
+            <button type="submit" name="action" value="reject" class="btn btn-danger btn-lg" id="rejectBtn" style="padding: 12px 30px; font-weight: bold;">
+                <i class="fas fa-times-circle"></i> Tolak Pendaftaran
+            </button>
+
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary btn-lg" style="padding: 12px 30px;">
+                <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+            </a>
+        </div>
+        
+        <div id="processingMessage" style="display: none; margin-top: 20px; padding: 15px; background: #e8f4f8; border-radius: 5px; border-left: 4px solid #0066cc; text-align: center;">
+            <p style="margin: 0; color: #0066cc; font-weight: bold;">⏳ Sedang memproses keputusan Anda...</p>
+        </div>
+    </form>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('verifyForm');
+        const actionInput = document.getElementById('actionInput');
+        const approveBtn = document.getElementById('approveBtn');
+        const rejectBtn = document.getElementById('rejectBtn');
+        const processingMsg = document.getElementById('processingMessage');
+        
+        // Click handlers to set the action value
+        approveBtn.addEventListener('click', function(e) {
+            actionInput.value = 'approve';
+        });
+        
+        rejectBtn.addEventListener('click', function(e) {
+            actionInput.value = 'reject';
+        });
+        
+        // Form submission handler
+        form.addEventListener('submit', function(e) {
+            const action = actionInput.value;
+            if (!action) {
+                e.preventDefault();
+                alert('Pilih tindakan (Setujui atau Tolak) terlebih dahulu');
+                return;
+            }
+            const message = action === 'approve' ? 'Sedang menyetujui pendaftaran...' : 'Sedang menolak pendaftaran...';
+            showProcessing(message);
+        });
+        
+        function showProcessing(message) {
+            processingMsg.style.display = 'block';
+            processingMsg.querySelector('p').textContent = message;
+            approveBtn.disabled = true;
+            rejectBtn.disabled = true;
+            approveBtn.style.opacity = '0.5';
+            rejectBtn.style.opacity = '0.5';
+            approveBtn.style.cursor = 'wait';
+            rejectBtn.style.cursor = 'wait';
+        }
+        
+        // Hover effects
+        [approveBtn, rejectBtn].forEach(btn => {
+            btn.addEventListener('mouseover', function() {
+                if (!this.disabled) {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+                }
+            });
+            btn.addEventListener('mouseout', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+    });
+    </script>
+</div>
+{% endblock %}

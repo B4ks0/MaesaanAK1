@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Pencaker{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>Dashboard Pencaker</h1>
+            
+            {% if pendaftaran %}
+                <div class="alert alert-info">
+                    <h5>Status Pendaftaran Anda</h5>
+                    <p><strong>NIK:</strong> {{ pendaftaran.nik }}</p>
+                    <p><strong>Nama:</strong> {{ pendaftaran.nama }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge bg-{% if pendaftaran.status == 'pending' %}warning{% elif pendaftaran.status == 'diverifikasi' %}success{% else %}danger{% endif %}">
+                            {{ pendaftaran.get_status_display }}
+                        </span>
+                    </p>
+                    <p><strong>Tanggal Pendaftaran:</strong> {{ pendaftaran.created_at|date:"d/m/Y H:i" }}</p>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <a href="{% url 'pencaker:isi_data_diri' %}" class="btn btn-primary w-100">
+                            <i class="fas fa-edit"></i> Lengkapi/Edit Data Diri
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'pencaker:upload_ktp' %}" class="btn btn-secondary w-100">
+                            <i class="fas fa-id-card"></i> Upload KTP Baru
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <p>Anda belum memiliki data pendaftaran. Silakan mulai dengan upload KTP.</p>
+                </div>
+                
+                <a href="{% url 'pencaker:upload_ktp' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-id-card"></i> Upload KTP Sekarang
+                </a>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Langkah-Langkah</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li class="mb-3">
+                            <strong>Upload KTP</strong>
+                            <p class="text-muted small">Foto KTP Anda (JPG/PNG)</p>
+                        </li>
+                        <li class="mb-3">
+                            <strong>Review Data</strong>
+                            <p class="text-muted small">Verifikasi data yang diekstrak dari KTP</p>
+                        </li>
+                        <li class="mb-3">
+                            <strong>Lengkapi Data Diri</strong>
+                            <p class="text-muted small">Isi data tambahan (keahlian, pengalaman, dll)</p>
+                        </li>
+                        <li>
+                            <strong>Kirim Pendaftaran</strong>
+                            <p class="text-muted small">Tunggu verifikasi dari admin</p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

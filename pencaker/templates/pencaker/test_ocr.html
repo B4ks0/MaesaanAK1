@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Test OCR{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Test OCR & Gemini AI</h1>
+            <p class="text-muted">Debug page untuk testing OCR dan Gemini AI extraction</p>
+            
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Error</h4>
+                    {{ error }}
+                </div>
+            {% endif %}
+            
+            <form method="post" enctype="multipart/form-data" class="mb-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="ktp_image" class="form-label">Upload KTP Image</label>
+                    <input type="file" class="form-control" id="ktp_image" name="ktp_image" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Process</button>
+            </form>
+            
+            {% if ocr_text %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Raw OCR Text</h3>
+                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; max-height: 400px; overflow-y: auto;">{{ ocr_text }}</pre>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h3>Metadata</h3>
+                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; max-height: 400px; overflow-y: auto;">{{ metadata }}</pre>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h3>Extracted Data (Gemini AI)</h3>
+                        {% if extracted_data %}
+                            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">{{ extracted_data }}</pre>
+                        {% else %}
+                            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">{{ error }}</pre>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

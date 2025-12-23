@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Kartu AK1 - MAESAAN{% endblock %}
+
+{% block content %}
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-id-card"></i>
+        </div>
+        <div class="card-title">Kartu Pencari Kerja AK1</div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 30px;">
+        <p>Kartu Pencari Kerja AK1 telah diverifikasi dan siap digunakan</p>
+    </div>
+
+    <!-- Kartu AK1 Digital -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 15px;
+                padding: 30px;
+                color: white;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                margin-bottom: 30px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h3 style="margin: 0; font-size: 1.8em;">KARTU PENCARI KERJA</h3>
+            <p style="margin: 5px 0; opacity: 0.9;">AK-1 DIGITAL</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; align-items: center;">
+            <!-- Foto -->
+            <div style="text-align: center;">
+                {% if pendaftaran.photo_data %}
+                    <img src="data:image/jpeg;base64,{{ pendaftaran.photo_data }}"
+                         style="width: 120px; height: 150px; object-fit: cover; border-radius: 8px; border: 3px solid white;">
+                {% else %}
+                    <div style="width: 120px; height: 150px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user" style="font-size: 3em;"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Data -->
+            <div>
+                <div style="margin-bottom: 10px;">
+                    <strong>NIK:</strong> {{ pendaftaran.nik }}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Nama:</strong> {{ pendaftaran.nama }}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>TTL:</strong> {{ pendaftaran.ttl }}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Jenis Kelamin:</strong> {{ pendaftaran.get_jk_display }}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Status:</strong> {{ pendaftaran.get_status_perkawinan_display }}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Pendidikan:</strong> {{ pendaftaran.pendidikan }}
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <small>Berlaku sampai: {{ pendaftaran.created_at|date:"d M Y"|add:"2 years"|date:"d M Y" }}</small>
+                </div>
+                <div style="text-align: right;">
+                    <small>Dinas Tenaga Kerja</small><br>
+                    <small>Kabupaten Minahasa</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="text-align: center;">
+        <button onclick="window.print()" class="btn btn-primary" style="margin-right: 10px;">
+            <i class="fas fa-print"></i> Cetak Kartu
+        </button>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+        </a>
+    </div>
+</div>
+
+<style>
+@media print {
+    body * { visibility: hidden; }
+    .card { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; }
+    .card-header, .btn { display: none; }
+}
+</style>
+{% endblock %}

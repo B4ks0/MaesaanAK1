@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}MAESAAN - Sistem Kartu Pencari Kerja AK1{% endblock %}
+
+{% block content %}
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="card-title">Selamat Datang di MAESAAN</div>
+    </div>
+    <p>Sistem Layanan Digital Kartu Pencari Kerja (AK1) untuk Dinas Tenaga Kerja Kabupaten Minahasa</p>
+</div>
+
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-list-check"></i>
+        </div>
+        <div class="card-title">Alur Pendaftaran AK1</div>
+    </div>
+    <div class="timeline">
+        <div class="timeline-item">
+            <h4>1. Registrasi Akun</h4>
+            <p>Buat akun baru dengan email dan password yang valid</p>
+        </div>
+        <div class="timeline-item">
+            <h4>2. Login Sistem</h4>
+            <p>Masuk ke sistem menggunakan akun yang telah dibuat</p>
+        </div>
+        <div class="timeline-item">
+            <h4>3. Isi Formulir Pendaftaran</h4>
+            <p>Lengkapi data diri dan upload dokumen persyaratan</p>
+        </div>
+        <div class="timeline-item">
+            <h4>4. Verifikasi oleh Admin</h4>
+            <p>Petugas memverifikasi kelengkapan dokumen (5-10 menit)</p>
+        </div>
+        <div class="timeline-item">
+            <h4>5. Terbitkan Kartu AK1</h4>
+            <p>Sistem menghasilkan kartu AK1 digital yang dapat diunduh</p>
+        </div>
+    </div>
+</div>
+
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-address-card"></i>
+        </div>
+        <div class="card-title">Kontak Layanan</div>
+    </div>
+    <div class="status-info">
+        <div class="status-item">
+            <div class="status-label">Alamat</div>
+            <div class="status-value">Dinas Tenaga Kerja<br>Kabupaten Minahasa</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Jam Layanan</div>
+            <div class="status-value">Senin - Kamis: 08:00-16:00<br>Jumat: 08:00-15:30</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Telepon</div>
+            <div class="status-value">[Nomor Telepon]</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">WhatsApp</div>
+            <div class="status-value">[Nomor WhatsApp]</div>
+        </div>
+    </div>
+</div>
+
+{% if not user.is_authenticated %}
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-sign-in-alt"></i>
+        </div>
+        <div class="card-title">Akses Sistem</div>
+    </div>
+    <div style="text-align: center;">
+        <p style="margin-bottom: 20px;">Silakan login untuk mengakses sistem pendaftaran AK1</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{% url 'register' %}" class="btn btn-outline" style="margin-left: 10px;">
+            <i class="fas fa-user-plus"></i> Daftar Akun Baru
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

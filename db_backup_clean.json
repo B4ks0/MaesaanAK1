@@ -1,0 +1,827 @@
+[
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 6,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 6,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 6,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 6,
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 1,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 3,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 3,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 3,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 3,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 2,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 2,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 2,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 2,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 4,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 4,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 4,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 4,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add pendaftaran a k1",
+    "content_type": 7,
+    "codename": "add_pendaftaranak1"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change pendaftaran a k1",
+    "content_type": 7,
+    "codename": "change_pendaftaranak1"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete pendaftaran a k1",
+    "content_type": 7,
+    "codename": "delete_pendaftaranak1"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view pendaftaran a k1",
+    "content_type": 7,
+    "codename": "view_pendaftaranak1"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 5,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 5,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 5,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 5,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "accounts",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "pendaftaran",
+    "model": "pendaftaranak1"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "rjg4c72est3acxgkxwon24nwyx8qwqwv",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hApBQaX7j0DmRlAqgaS0q6Md7dNutDtf-_9twi4LiWsPc1hiuIilDj9boT8THUH8YH13iS3uswTyV2RB-3y1mJ6XQ_376BgL1utnQVLrHI2FsFEsAMDGTrbSM7nEXJS1mjPgMQIyM6o0QFktzE9ePH5AubvN9I:1vPmDo:hlITNc5T3NoV-_nA2Tbb3vsg1lnnpeAutqLvNdP9BeQ",
+    "expire_date": "2025-12-14T18:32:32.890Z"
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$giwxwh9cmQvcoIWX81p1D9$jIP3E17re3/UiwEp4DYxdmIeDcL8FR9dqiEPpeT3HEQ=",
+    "last_login": "2025-11-30T18:32:32.887Z",
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:32:32.340Z",
+    "nama_lengkap": "owen",
+    "email": "owen@gmail.com",
+    "created_at": "2025-11-30T18:32:32.881Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$j9fTNFBOohgyPW4zqYGGFR$IpCEoTPJlT7MyyRXNWGTCeE8akn3pvtdsNYDeaKg1qc=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:20.159Z",
+    "nama_lengkap": "Ahmad Surya",
+    "email": "ahmad.surya@example.com",
+    "created_at": "2025-11-30T18:43:20.159Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$Ch285sSaJAKcVFoY47K8J1$DeJzrptS6wUO/wfUSiRdhJOkIR39KhS1CZUzB+PPnWU=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:20.705Z",
+    "nama_lengkap": "Siti Nurhaliza",
+    "email": "siti.nurhaliza@example.com",
+    "created_at": "2025-11-30T18:43:20.705Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$kGvDovpIjVcbOxAkwfAEf0$yi/PuRwBJGFZWPgmfYekKmwSF16WpxqSTJuvNMKUh5Y=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:21.501Z",
+    "nama_lengkap": "Budi Santoso",
+    "email": "budi.santoso@example.com",
+    "created_at": "2025-11-30T18:43:21.501Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$Qxpm9ol8X7wnFIrfmzJaRF$n6d4KYStE7Jo40FOQ+jMNu9zDcS4oSkqFzr6h5jDCs0=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:22.140Z",
+    "nama_lengkap": "Dewi Kartika",
+    "email": "dewi.kartika@example.com",
+    "created_at": "2025-11-30T18:43:22.140Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$NgZRunXymEiXSVadXeHxCZ$iYGqX3mFzc5Eg5Ztxp+l6B+dwy3IMlc1wUaD443o8f0=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:22.946Z",
+    "nama_lengkap": "Rudi Hartono",
+    "email": "rudi.hartono@example.com",
+    "created_at": "2025-11-30T18:43:22.946Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$85BBIx6u8JRnfEziau2TaA$n9GdOfObsUBTWQIe9oLJf7mLSGG8o/ZUri6/YrL1eYI=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:23.703Z",
+    "nama_lengkap": "Maya Sari",
+    "email": "maya.sari@example.com",
+    "created_at": "2025-11-30T18:43:23.703Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$WrFyTXsSn4qFHQXaQE44wN$AZ2sPzvmQ5xUk/Xj0DFbacFANV6SsJkrHmYiOFdEGSs=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:24.311Z",
+    "nama_lengkap": "Agus Prasetyo",
+    "email": "agus.prasetyo@example.com",
+    "created_at": "2025-11-30T18:43:24.311Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "pk": 9,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$omO7ugjer7kKnkoDzm3kRQ$PGenSI9MM/GWhzqaSI1JIZMgK1mi+gO7WFYjeK+wER4=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-11-30T18:43:24.925Z",
+    "nama_lengkap": "Lina Marlina",
+    "email": "lina.marlina@example.com",
+    "created_at": "2025-11-30T18:43:24.925Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "nik": "4862530899593586",
+    "nama": "Ahmad Surya",
+    "ttl": "Tondano, 5-6-1980",
+    "jk": "PEREMPUAN",
+    "status_perkawinan": "KAWIN",
+    "pendidikan": "D3",
+    "agama": null,
+    "alamat": "Jl. Wolter Monginsidi, Amurang",
+    "keahlian": "Teknik Sipil",
+    "pengalaman": "2 tahun di bidang IT",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "ditolak",
+    "verified_at": "2025-11-01T19:43:25.523Z",
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.556Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "nik": "3170395928750031",
+    "nama": "Ahmad Surya",
+    "ttl": "Tondano, 24-4-1995",
+    "jk": "LAKI-LAKI",
+    "status_perkawinan": "CERAI HIDUP",
+    "pendidikan": "SMA",
+    "agama": null,
+    "alamat": "Jl. Diponegoro, Bitung",
+    "keahlian": null,
+    "pengalaman": "2 tahun di bidang IT",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "diverifikasi",
+    "verified_at": "2025-11-21T19:43:25.559Z",
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.559Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "nik": "6120137878920792",
+    "nama": "Siti Nurhaliza",
+    "ttl": "Manado, 12-2-2000",
+    "jk": "PEREMPUAN",
+    "status_perkawinan": "CERAI MATI",
+    "pendidikan": "SMA",
+    "agama": null,
+    "alamat": "Jl. Raya Manado, Tomohon",
+    "keahlian": null,
+    "pengalaman": "2 tahun di bidang IT",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "diverifikasi",
+    "verified_at": "2025-11-10T19:43:25.560Z",
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.561Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "nik": "1667552335307524",
+    "nama": "Budi Santoso",
+    "ttl": "Tondano, 22-4-1994",
+    "jk": "PEREMPUAN",
+    "status_perkawinan": "CERAI HIDUP",
+    "pendidikan": "S1",
+    "agama": null,
+    "alamat": "Jl. Sam Ratulangi, Tondano",
+    "keahlian": "Teknik Sipil",
+    "pengalaman": "Pengalaman 3 tahun di konstruksi",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "ditolak",
+    "verified_at": "2025-11-19T19:43:25.562Z",
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.562Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 5,
+  "fields": {
+    "user": 4,
+    "nik": "4965444340481177",
+    "nama": "Budi Santoso",
+    "ttl": "Tomohon, 2-7-1990",
+    "jk": "LAKI-LAKI",
+    "status_perkawinan": "BELUM KAWIN",
+    "pendidikan": "SMA",
+    "agama": null,
+    "alamat": "Jl. Diponegoro, Bitung",
+    "keahlian": "Komputer",
+    "pengalaman": null,
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "pending",
+    "verified_at": null,
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.564Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 6,
+  "fields": {
+    "user": 5,
+    "nik": "7096321552809579",
+    "nama": "Dewi Kartika",
+    "ttl": "Amurang, 12-7-1986",
+    "jk": "PEREMPUAN",
+    "status_perkawinan": "BELUM KAWIN",
+    "pendidikan": null,
+    "agama": null,
+    "alamat": "Jl. Wolter Monginsidi, Amurang",
+    "keahlian": "Komputer",
+    "pengalaman": "Pengalaman 3 tahun di konstruksi",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "pending",
+    "verified_at": null,
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.566Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 7,
+  "fields": {
+    "user": 5,
+    "nik": "0172067476947864",
+    "nama": "Dewi Kartika",
+    "ttl": "Manado, 16-7-1987",
+    "jk": "LAKI-LAKI",
+    "status_perkawinan": "KAWIN",
+    "pendidikan": "S1",
+    "agama": null,
+    "alamat": "Jl. Raya Manado, Tomohon",
+    "keahlian": "Teknik Sipil",
+    "pengalaman": "5 tahun sebagai admin",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "pending",
+    "verified_at": null,
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.568Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 8,
+  "fields": {
+    "user": 6,
+    "nik": "5630966174591675",
+    "nama": "Rudi Hartono",
+    "ttl": "Tondano, 5-2-1989",
+    "jk": "LAKI-LAKI",
+    "status_perkawinan": "BELUM KAWIN",
+    "pendidikan": "S1",
+    "agama": null,
+    "alamat": "Jl. Diponegoro, Bitung",
+    "keahlian": "Teknik Sipil",
+    "pengalaman": "Pengalaman 3 tahun di konstruksi",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "pending",
+    "verified_at": null,
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.570Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 9,
+  "fields": {
+    "user": 7,
+    "nik": "4859402814074717",
+    "nama": "Maya Sari",
+    "ttl": "Amurang, 15-12-1997",
+    "jk": "LAKI-LAKI",
+    "status_perkawinan": "BELUM KAWIN",
+    "pendidikan": "S1",
+    "agama": null,
+    "alamat": "Jl. Raya Manado, Tomohon",
+    "keahlian": "Teknik Sipil",
+    "pengalaman": null,
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "pending",
+    "verified_at": null,
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.571Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 10,
+  "fields": {
+    "user": 8,
+    "nik": "5655189687593000",
+    "nama": "Agus Prasetyo",
+    "ttl": "Tondano, 16-1-1982",
+    "jk": "PEREMPUAN",
+    "status_perkawinan": "KAWIN",
+    "pendidikan": "D3",
+    "agama": null,
+    "alamat": "Jl. Wolter Monginsidi, Amurang",
+    "keahlian": null,
+    "pengalaman": null,
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "pending",
+    "verified_at": null,
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.573Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 11,
+  "fields": {
+    "user": 8,
+    "nik": "6755872400343977",
+    "nama": "Agus Prasetyo",
+    "ttl": "Tondano, 30-6-1985",
+    "jk": "LAKI-LAKI",
+    "status_perkawinan": "BELUM KAWIN",
+    "pendidikan": "S1",
+    "agama": null,
+    "alamat": "Jl. Sam Ratulangi, Tondano",
+    "keahlian": null,
+    "pengalaman": "5 tahun sebagai admin",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "ditolak",
+    "verified_at": "2025-11-11T19:43:25.575Z",
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.575Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 12,
+  "fields": {
+    "user": 9,
+    "nik": "9303972447093755",
+    "nama": "Lina Marlina",
+    "ttl": "Tondano, 5-10-1986",
+    "jk": "PEREMPUAN",
+    "status_perkawinan": "KAWIN",
+    "pendidikan": "S1",
+    "agama": null,
+    "alamat": "Jl. Sam Ratulangi, Tondano",
+    "keahlian": "Administrasi",
+    "pengalaman": "2 tahun di bidang IT",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "ditolak",
+    "verified_at": "2025-11-11T19:43:25.577Z",
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.577Z"
+  }
+},
+{
+  "model": "pendaftaran.pendaftaranak1",
+  "pk": 13,
+  "fields": {
+    "user": 9,
+    "nik": "5826936600741403",
+    "nama": "Lina Marlina",
+    "ttl": "Amurang, 22-2-1986",
+    "jk": "PEREMPUAN",
+    "status_perkawinan": "BELUM KAWIN",
+    "pendidikan": "S2",
+    "agama": null,
+    "alamat": "Jl. Wolter Monginsidi, Amurang",
+    "keahlian": "Teknik Sipil",
+    "pengalaman": "2 tahun di bidang IT",
+    "ktp_data": null,
+    "photo_data": null,
+    "ijazah_data": null,
+    "status": "pending",
+    "verified_at": null,
+    "review_comment": null,
+    "reviewed_by": null,
+    "reviewed_at": null,
+    "created_at": "2025-11-30T18:43:25.579Z"
+  }
+}
+]

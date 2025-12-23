@@ -1,0 +1,1089 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{gray},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    frame=single,
+    tabsize=4,
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b
+}
+
+\title{\textbf{BAGIAN KEDUA: CONVOLUTIONAL NEURAL NETWORK (CNN) \& ARSITEKTUR DEEP LEARNING UNTUK CITRA MEDIS}}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{2.1 Konsep Dasar Convolutional Neural Network (CNN)}
+Convolutional Neural Network (CNN) merupakan arsitektur jaringan saraf tiruan yang dirancang khusus untuk memproses data dengan struktur grid, seperti citra digital. Berbeda dengan jaringan saraf biasa (fully connected neural networks) yang memperlakukan setiap piksel sebagai fitur independen, CNN memanfaatkan struktur spasial dari citra untuk mengekstrak fitur secara hierarkis dan efisien.
+
+Konsep dasar CNN terinspirasi dari sistem penglihatan biologis pada mamalia, khususnya penelitian Hubel dan Wiesel (1962) tentang visual cortex kucing yang menunjukkan bahwa neuron-neuron tertentu merespons pola visual spesifik pada area terbatas (receptive field). Dalam konteks deep learning, prinsip ini diadaptasi menjadi operasi konvolusi yang memungkinkan jaringan untuk:
+
+\begin{enumerate}
+    \item \textbf{Local Connectivity}: Setiap neuron hanya terhubung dengan area lokal pada layer sebelumnya, bukan dengan seluruh input seperti pada fully connected networks. Hal ini mengurangi jumlah parameter secara signifikan dan memungkinkan jaringan untuk fokus pada pola-pola lokal yang penting.
+    
+    \item \textbf{Parameter Sharing}: Filter konvolusi yang sama digunakan di seluruh bagian citra, yang berarti parameter yang dipelajari untuk mendeteksi fitur tertentu (misalnya, edge atau texture) dapat diaplikasikan di mana saja pada citra. Prinsip ini membuat CNN sangat efisien dan mampu menangani translasi objek dalam citra.
+    
+    \item \textbf{Hierarchical Feature Learning}: CNN secara otomatis mempelajari representasi fitur secara bertingkat, dari fitur sederhana (edges, corners) pada layer awal hingga fitur kompleks (objek lengkap, pola struktural) pada layer yang lebih dalam.
+\end{enumerate}
+
+Dalam konteks citra medis, khususnya MRI dan CT scan otak, kemampuan CNN untuk mengekstrak fitur hierarkis sangat krusial. Layer-layer awal CNN dapat menangkap tekstur jaringan otak, kontras intensitas, dan batas-batas anatomi dasar. Layer-layer tengah kemudian mengkombinasikan informasi ini untuk mengenali struktur anatomi yang lebih kompleks seperti ventrikel, sulci, dan gyri. Akhirnya, layer-layer dalam mampu membedakan pola patologis yang mengindikasikan keberadaan tumor, jenis tumor spesifik, atau kondisi normal.
+
+Keunggulan CNN dalam analisis citra medis telah terbukti dalam berbagai studi klinis, di mana model CNN mencapai akurasi yang setara atau bahkan melampaui radiolog berpengalaman dalam tugas-tugas seperti deteksi nodul paru, klasifikasi lesi kulit, dan segmentasi tumor otak. Kemampuan ini menjadikan CNN sebagai fondasi teknologi computer-aided diagnosis (CAD) modern.
+
+\section*{2.2 Komponen dan Mekanisme CNN}
+CNN terdiri dari beberapa komponen fundamental yang bekerja secara sinergis untuk mengekstrak dan mempelajari representasi fitur dari data citra. Setiap komponen memiliki peran spesifik dalam arsitektur keseluruhan dan berkontribusi terhadap kemampuan model dalam melakukan klasifikasi atau deteksi objek.
+
+\subsection*{2.2.1 Convolutional Layer}
+Convolutional layer merupakan komponen inti dari CNN yang melakukan operasi konvolusi antara input (citra atau feature map) dengan filter yang dapat dipelajari (learnable filters/kernels). Secara matematis, operasi konvolusi 2D dapat dinyatakan sebagai:
+\[
+S(i,j) = (I * K)(i,j) = \sum_m \sum_n I(i+m, j+n) \cdot K(m,n)
+\]
+Di mana $I$ adalah input image, $K$ adalah kernel/filter, dan $S$ adalah feature map hasil konvolusi.
+
+Setiap filter dalam convolutional layer memiliki bobot yang dipelajari melalui proses training untuk mendeteksi fitur spesifik. Misalnya, pada layer awal, filter dapat mempelajari untuk mendeteksi edges horizontal, vertical, atau diagonal. Pada layer yang lebih dalam, filter dapat mendeteksi pola yang lebih kompleks seperti tekstur atau bagian dari objek.
+
+Parameter penting dalam convolutional layer meliputi:
+
+\begin{itemize}
+    \item \textbf{Kernel size}: Ukuran filter (misalnya 3×3, 5×5, 7×7)
+    \item \textbf{Stride}: Langkah pergeseran filter saat melakukan konvolusi
+    \item \textbf{Padding}: Penambahan border pada input untuk mengontrol ukuran output
+    \item \textbf{Number of filters}: Jumlah filter yang digunakan, menentukan depth dari output feature map
+\end{itemize}
+
+Dalam implementasi yang digunakan pada penelitian ini, ResNet50 menggunakan kernel size 7×7 dengan stride 2 pada layer pertama untuk reduksi dimensi awal, sedangkan EfficientNet-B3 menggunakan depthwise separable convolutions dengan kernel size bervariasi (3×3 hingga 5×5) untuk efisiensi komputasi.
+
+\subsection*{2.2.2 Pooling Layer}
+Pooling layer berfungsi untuk mengurangi dimensi spasial (width dan height) dari feature map, yang memiliki beberapa keuntungan:
+
+\begin{enumerate}
+    \item Mengurangi jumlah parameter dan komputasi pada layer berikutnya
+    \item Memberikan invarian terhadap translasi kecil pada input
+    \item Memperluas receptive field dari neuron pada layer berikutnya
+    \item Membantu mencegah overfitting
+\end{enumerate}
+
+Jenis pooling yang paling umum digunakan adalah:
+
+\textbf{Max Pooling}: Mengambil nilai maksimum dari setiap region yang ditentukan. Operasi ini dapat dinyatakan sebagai:
+\[
+y_{i,j} = \max_{(m,n) \in R_{i,j}} x_{m,n}
+\]
+Di mana $R_{i,j}$ adalah region pooling pada posisi $(i,j)$.
+
+\textbf{Average Pooling}: Mengambil nilai rata-rata dari setiap region:
+\[
+y_{i,j} = \frac{1}{|R_{i,j}|} \sum_{(m,n) \in R_{i,j}} x_{m,n}
+\]
+
+Max pooling cenderung mempertahankan fitur yang paling dominan dan sering digunakan pada layer-layer awal hingga tengah, sedangkan average pooling sering digunakan pada layer akhir sebelum fully connected layer (seperti Global Average Pooling).
+
+Dalam kode implementasi yang disediakan, kedua arsitektur (ResNet50 dan EfficientNet-B3) menggunakan max pooling dengan kernel size 3×3 pada tahap awal, dan Adaptive Average Pooling pada tahap akhir sebelum klasifikasi final.
+
+\subsection*{2.2.3 Fully Connected Layer}
+Fully Connected (FC) layer, juga dikenal sebagai Dense layer, menghubungkan setiap neuron dengan semua neuron pada layer sebelumnya. Layer ini biasanya digunakan pada bagian akhir arsitektur CNN untuk melakukan klasifikasi berdasarkan fitur yang telah diekstrak oleh convolutional dan pooling layers.
+
+Operasi pada FC layer dapat dinyatakan sebagai:
+\[
+y = f(Wx + b)
+\]
+Di mana $W$ adalah weight matrix, $x$ adalah input vector, $b$ adalah bias vector, dan $f$ adalah activation function.
+
+Dalam konteks klasifikasi tumor otak dengan 4 kelas (glioma, meningioma, pituitary, notumor), output FC layer terakhir memiliki 4 neuron yang merepresentasikan probabilitas untuk setiap kelas. Probability scores ini diperoleh melalui softmax activation:
+\[
+\text{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^K e^{z_j}}
+\]
+Di mana $K$ adalah jumlah kelas (dalam hal ini 4).
+
+Pada implementasi hybrid model dalam penelitian ini, FC layer dirancang dengan arsitektur Sequential yang terdiri dari:
+
+\begin{lstlisting}
+nn.Sequential(
+    nn.Linear(3584, 512),  # Menggabungkan fitur dari EfficientNet dan ResNet
+    nn.ReLU(),
+    nn.Dropout(0.3),
+    nn.Linear(512, 4)      # Output untuk 4 kelas
+)
+\end{lstlisting}
+
+\subsection*{2.2.4 Activation Functions}
+Activation functions memperkenalkan non-linearitas ke dalam jaringan, yang sangat penting karena tanpa non-linearitas, deep neural network akan berperilaku seperti linear model terlepas dari jumlah layer-nya. Beberapa activation function yang umum digunakan:
+
+\textbf{ReLU (Rectified Linear Unit):}
+\[
+\text{ReLU}(x) = \max(0, x)
+\]
+ReLU adalah activation function paling populer karena:
+
+\begin{itemize}
+    \item Komputasi sangat efisien
+    \item Mengatasi masalah vanishing gradient
+    \item Mempercepat konvergensi training
+\end{itemize}
+
+\textbf{Swish (SiLU):}
+\[
+\text{Swish}(x) = x \cdot \sigma(x) = \frac{x}{1 + e^{-x}}
+\]
+Swish digunakan pada EfficientNet karena terbukti memberikan performa lebih baik pada deep networks, meskipun sedikit lebih mahal secara komputasi.
+
+\textbf{Softmax (untuk output layer):}
+\[
+\text{Softmax}(x_i) = \frac{e^{x_i}}{\sum_{j} e^{x_j}}
+\]
+Softmax mengkonversi logits menjadi probability distribution untuk klasifikasi multi-class.
+
+\subsection*{2.2.5 Dropout dan Regularisasi}
+Dropout adalah teknik regularisasi yang secara random ``mematikan'' sebagian neuron selama training untuk mencegah overfitting. Pada setiap iterasi training, setiap neuron memiliki probabilitas $p$ untuk di-dropout (set menjadi 0).
+
+Secara matematis, dropout dapat dinyatakan sebagai:
+\[
+y = \text{dropout}(x, p) = 
+\begin{cases} 
+0 & \text{dengan probabilitas } p \\
+\frac{x}{1-p} & \text{dengan probabilitas } 1-p 
+\end{cases}
+\]
+Scaling factor $\frac{1}{1-p}$ memastikan bahwa expected value dari output tetap sama selama training dan testing.
+
+Dalam implementasi penelitian ini, dropout rate 0.3 digunakan pada hybrid model:
+
+\begin{lstlisting}
+nn.Dropout(0.3)
+\end{lstlisting}
+
+Ini berarti 30\% neuron secara random di-nonaktifkan selama training, yang memaksa jaringan untuk belajar fitur yang lebih robust dan tidak bergantung pada neuron spesifik.
+
+Selain dropout, regularisasi juga dilakukan melalui:
+
+\begin{itemize}
+    \item Weight decay dalam optimizer AdamW
+    \item Data augmentation (RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, ColorJitter)
+    \item Batch Normalization yang membantu stabilisasi training
+\end{itemize}
+
+\section*{2.3 Transfer Learning dan Fine-Tuning}
+Transfer learning merupakan paradigma pembelajaran mesin di mana pengetahuan yang diperoleh dari satu domain (source domain) ditransfer untuk meningkatkan pembelajaran pada domain yang berbeda tetapi terkait (target domain). Dalam konteks deep learning untuk citra medis, transfer learning sangat penting karena dataset medis sering kali terbatas dalam ukuran, sementara melatih CNN dari nol membutuhkan jutaan sampel data.
+
+\subsection*{2.3.1 Konsep Transfer Learning}
+Fondasi teoritis transfer learning didasarkan pada asumsi bahwa fitur-fitur tingkat rendah yang dipelajari dari dataset besar (seperti ImageNet) dapat digeneralisasi ke domain lain. Penelitian menunjukkan bahwa layer-layer awal CNN yang dilatih pada ImageNet mempelajari fitur-fitur universal seperti edge detectors, color blobs, dan texture patterns yang relevan untuk berbagai jenis citra, termasuk citra medis.
+
+Proses transfer learning dalam penelitian ini mengikuti paradigm berikut:
+
+\textbf{Phase 1: Pretraining on Source Domain (ImageNet)}
+
+\begin{itemize}
+    \item Model (ResNet50, EfficientNet-B3) dilatih pada ImageNet dataset yang berisi 1.2 juta citra natural dengan 1000 kategori
+    \item Layer-layer konvolusi mempelajari representasi fitur hierarkis yang robust
+    \item Weight yang telah dilatih disimpan sebagai pretrained weights
+\end{itemize}
+
+\textbf{Phase 2: Adaptation to Target Domain (Brain MRI)}
+
+\begin{itemize}
+    \item Pretrained weights dimuat sebagai inisialisasi model
+    \item Classification head diganti untuk menyesuaikan jumlah kelas target (4 kelas tumor)
+    \item Model di-fine-tune pada dataset brain tumor MRI
+\end{itemize}
+
+Keuntungan utama transfer learning dalam konteks penelitian ini:
+
+\begin{enumerate}
+    \item \textbf{Sample Efficiency}: Dataset brain tumor yang digunakan (~5800 training images) relatif kecil dibandingkan kebutuhan training from scratch (biasanya memerlukan >100k images). Transfer learning memungkinkan model mencapai akurasi tinggi dengan data terbatas.
+    
+    \item \textbf{Faster Convergence}: Model konvergen dalam 15 epoch (seperti terlihat dalam training logs), jauh lebih cepat dibandingkan training from scratch yang bisa memerlukan 100+ epoch.
+    
+    \item \textbf{Better Generalization}: Pretrained features membantu model menghindari overfitting pada training data dan generalisasi lebih baik pada test data, seperti terlihat dari test accuracy ~97\% pada MRI dan ~46-57\% pada CT scan.
+    
+    \item \textbf{Computational Efficiency}: Training time berkurang signifikan karena hanya perlu fine-tuning, bukan training seluruh network dari random initialization.
+\end{enumerate}
+
+\subsection*{2.3.2 Strategi Fine-Tuning}
+Fine-tuning adalah proses mengadaptasi pretrained model ke task spesifik dengan melanjutkan training pada target dataset. Terdapat beberapa strategi fine-tuning yang dapat diterapkan:
+
+\begin{enumerate}
+    \item \textbf{Feature Extraction (Frozen Base)}
+    \begin{itemize}
+        \item Semua layer konvolusi di-freeze (weights tidak diupdate)
+        \item Hanya classification head yang dilatih
+        \item Cocok ketika target dataset sangat kecil (<1000 samples)
+        \item Sangat cepat tetapi mungkin kurang optimal jika domain sangat berbeda
+    \end{itemize}
+    
+    \item \textbf{Fine-Tuning All Layers}
+    \begin{itemize}
+        \item Seluruh network dilatih dengan learning rate kecil
+        \item Memungkinkan adaptasi penuh ke target domain
+        \item Cocok ketika target dataset cukup besar (>5000 samples)
+        \item Implementasi dalam penelitian ini:
+    \end{itemize}
+\end{enumerate}
+
+\begin{lstlisting}
+model = EfficientNet.from_pretrained('efficientnet-b3', num_classes=4)
+optimizer = optim.AdamW(model.parameters(), lr=1e-4)
+\end{lstlisting}
+
+Learning rate 1e-4 dipilih cukup kecil untuk menghindari ``catastrophic forgetting'' dari pretrained features namun cukup besar untuk memungkinkan adaptasi.
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item \textbf{Progressive Unfreezing}
+    \begin{itemize}
+        \item Awalnya hanya classification head yang dilatih
+        \item Secara bertahap unfreeze layer-layer dari atas ke bawah
+        \item Memberikan kontrol lebih baik terhadap proses adaptasi
+        \item Tidak diimplementasikan dalam penelitian ini tetapi bisa meningkatkan hasil
+    \end{itemize}
+\end{enumerate}
+
+Dalam implementasi hybrid model, strategi fine-tuning yang digunakan adalah:
+
+\begin{lstlisting}
+class HybridNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # Load pretrained backbones
+        self.effnet = EfficientNet.from_pretrained('efficientnet-b3')
+        self.resnet = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+        
+        # Remove original classifiers
+        self.effnet._fc = nn.Identity()
+        self.resnet.fc = nn.Identity()
+        
+        # New fusion classifier
+        self.fc = nn.Sequential(
+            nn.Linear(effnet_out + resnet_out, 512),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(512, 4)
+        )
+\end{lstlisting}
+
+Kedua backbone (EfficientNet dan ResNet) di-fine-tune secara bersamaan, dengan classifier baru yang menggabungkan fitur dari kedua arsitektur. Strategi ini memungkinkan model untuk:
+
+\begin{itemize}
+    \item Memanfaatkan kekuatan komplementer dari dua arsitektur
+    \item Belajar representasi fitur yang lebih robust
+    \item Mengurangi overfitting melalui ensemble effect implisit
+\end{itemize}
+
+\subsection*{2.3.3 Pretrained Models pada ImageNet}
+ImageNet Large Scale Visual Recognition Challenge (ILSVRC) telah menjadi benchmark standar untuk evaluasi model computer vision sejak 2010. Dataset ImageNet berisi:
+
+\begin{itemize}
+    \item 1.28 juta training images
+    \item 50,000 validation images
+    \item 100,000 test images
+    \item 1,000 kategori objek
+\end{itemize}
+
+Model yang dilatih pada ImageNet telah terbukti menghasilkan representasi fitur yang sangat transferable ke berbagai domain, termasuk citra medis. Dalam penelitian ini, dua arsitektur pretrained digunakan:
+
+\textbf{ResNet50 (ImageNet1K\_V1)}
+
+\begin{lstlisting}
+model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
+\end{lstlisting}
+
+\begin{itemize}
+    \item Dilatih menggunakan training protocol standar ILSVRC
+    \item Top-1 accuracy ~76.1\% pada ImageNet validation set
+    \item Total parameters: ~25.6 juta
+    \item Depth: 50 layers dengan residual connections
+\end{itemize}
+
+\textbf{EfficientNet-B3}
+
+\begin{lstlisting}
+model = EfficientNet.from_pretrained('efficientnet-b3')
+\end{lstlisting}
+
+\begin{itemize}
+    \item Dilatih menggunakan compound scaling method
+    \item Top-1 accuracy ~81.6\% pada ImageNet
+    \item Total parameters: ~12 juta
+    \item Lebih efisien dalam parameter usage dibanding ResNet50
+\end{itemize}
+
+Perbandingan performa kedua pretrained model pada brain tumor classification:
+
+\begin{tabular}{lccc}
+\hline
+Model           & MRI Test Accuracy & Parameters & Training Epochs \\
+\hline
+ResNet50        & 97.26\%           & 25.6M      & 15              \\
+EfficientNet-B3 & 97.38\%           & 12M        & 15              \\
+Hybrid          & 97.14\%           & 37.6M      & 15              \\
+\hline
+\end{tabular}
+
+Dari hasil ini terlihat bahwa:
+
+\begin{enumerate}
+    \item EfficientNet-B3 mencapai accuracy tertinggi dengan hanya setengah parameter ResNet50
+    \item Hybrid model tidak signifikan meningkatkan accuracy pada MRI data
+    \item Semua model menunjukkan excellent transfer learning dari ImageNet ke brain MRI domain
+\end{enumerate}
+
+Namun pada CT scan data (yang sangat berbeda dari training distribution):
+
+\begin{tabular}{lc}
+\hline
+Model           & CT Test Accuracy \\
+\hline
+ResNet50        & 57.43\%          \\
+EfficientNet-B3 & 54.66\%          \\
+Hybrid          & 45.78\%          \\
+\hline
+\end{tabular}
+
+Performance drop signifikan pada CT scan menunjukkan limitation transfer learning ketika domain shift terlalu besar, mengindikasikan perlunya:
+
+\begin{itemize}
+    \item Domain adaptation techniques
+    \item Multi-modal training
+    \item Larger medical imaging pretraining datasets
+\end{itemize}
+
+\section*{2.4 Arsitektur ResNet (Residual Network)}
+ResNet, diperkenalkan oleh He et al. (2015) dalam paper ``Deep Residual Learning for Image Recognition'', merupakan terobosan revolusioner dalam deep learning yang memungkinkan training network dengan ratusan atau bahkan ribuan layer. Sebelum ResNet, training network yang sangat dalam menghadapi masalah degradasi yang membatasi depth praktis hingga ~20-30 layer.
+
+\subsection*{2.4.1 Masalah Degradasi pada Deep Networks}
+Sebelum ResNet, terdapat asumsi bahwa network yang lebih dalam seharusnya tidak berkinerja lebih buruk dari network yang lebih dangkal, karena solusi network dangkal dapat direpresentasikan sebagai subset dari network dalam dengan membuat layer tambahan menjadi identity mapping. Namun dalam praktik, training error justru meningkat seiring bertambahnya depth, fenomena ini disebut degradation problem.
+
+Degradation berbeda dengan overfitting:
+
+\begin{itemize}
+    \item \textbf{Overfitting}: Training error rendah tetapi test error tinggi (network terlalu fit dengan training data)
+    \item \textbf{Degradation}: Training error sendiri yang tinggi (network gagal belajar bahkan dari training data)
+\end{itemize}
+
+Penyebab degradation tidak sepenuhnya clear tetapi terkait dengan:
+
+\begin{enumerate}
+    \item \textbf{Vanishing Gradient}: Pada network yang sangat dalam, gradient yang di-backpropagate dari output ke input layer-layer awal menjadi sangat kecil, membuat weight update tidak efektif. Secara matematis:
+    \[
+    \frac{\partial L}{\partial W^{(1)}} = \frac{\partial L}{\partial a^{(n)}} \cdot \prod_{i=2}^{n} \frac{\partial a^{(i)}}{\partial a^{(i-1)}}
+    \]
+    Jika setiap $\frac{\partial a^{(i)}}{\partial a^{(i-1)}} < 1$, maka produk dari $n$ term ini menjadi exponentially small untuk $n besar.
+    
+    \item \textbf{Difficulty in Learning Identity Mapping}: Bahkan untuk mempelajari simple identity function $H(x) = x$, multiple nonlinear layers mengalami kesulitan karena harus mengkombinasikan multiple nonlinear transformations untuk menghasilkan linear mapping.
+    
+    \item \textbf{Gradient Flow Obstruction}: Dalam deep network tanpa shortcut connections, informasi harus flow melalui many layers of transformations, dan setiap transformation dapat degrade signal quality.
+\end{enumerate}
+
+Eksperimen empiris He et al. menunjukkan:
+
+\begin{itemize}
+    \item 20-layer plain network: ~8.8\% training error
+    \item 56-layer plain network: ~9.6\% training error (worse!)
+\end{itemize}
+
+Ini mengkonfirmasi degradation problem bukan disebabkan overfitting.
+
+\subsection*{2.4.2 Residual Connections}
+ResNet memecahkan degradation problem dengan memperkenalkan residual learning framework. Alih-alih belajar unreferenced mapping $H(x)$, layer-layer didesain untuk belajar residual function $F(x) = H(x) - x$.
+
+Residual Block didefinisikan sebagai:
+\[
+y = F(x, \{W_i\}) + x
+\]
+Di mana:
+
+\begin{itemize}
+    \item $x$ adalah input ke residual block
+    \item $F(x, \{W_i\})$ adalah residual mapping yang dipelajari
+    \item $+x$ adalah identity shortcut connection
+    \item $y$ adalah output block
+\end{itemize}
+
+Keuntungan residual learning:
+
+\begin{enumerate}
+    \item \textbf{Easier Optimization}: Jika identity mapping adalah optimal, maka mudah bagi network untuk push weights dari residual layers mendekati zero, sehingga $F(x) \approx 0$ dan $y \approx x$. Ini jauh lebih mudah daripada memaksa multiple nonlinear layers belajar identity.
+    
+    \item \textbf{Gradient Flow}: Shortcut connections menyediakan direct path untuk gradient flow:
+    \[
+    \frac{\partial L}{\partial x} = \frac{\partial L}{\partial y} \cdot \left(1 + \frac{\partial F}{\partial x}\right)
+    \]
+    Term $1$ memastikan bahwa gradient dapat flow langsung ke layer-layer awal tanpa multiplicative degradation.
+    
+    \item \textbf{Ensemble Effect}: ResNet dapat dipandang sebagai ensemble dari banyak shallow networks yang berbeda share weights, karena terdapat $2^n$ possible paths dari input ke output pada network dengan $n$ residual blocks.
+\end{enumerate}
+
+\textbf{Implementation Details:}
+
+Dalam PyTorch, residual block diimplementasikan sebagai:
+
+\begin{lstlisting}
+class Bottleneck(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1):
+        super().__init__()
+        # Main path (residual)
+        self.conv1 = nn.Conv2d(in_channels, out_channels//4, 1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_channels//4)
+        self.conv2 = nn.Conv2d(out_channels//4, out_channels//4, 3, 
+                               stride=stride, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_channels//4)
+        self.conv3 = nn.Conv2d(out_channels//4, out_channels, 1, bias=False)
+        self.bn3 = nn.BatchNorm2d(out_channels)
+        
+        # Shortcut path
+        if stride != 1 or in_channels != out_channels:
+            self.downsample = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, 1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_channels)
+            )
+        else:
+            self.downsample = None
+    
+    def forward(self, x):
+        identity = x
+        
+        # Residual path
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = F.relu(self.bn2(self.conv2(out)))
+        out = self.bn3(self.conv3(out))
+        
+        # Shortcut path
+        if self.downsample is not None:
+            identity = self.downsample(x)
+        
+        # Addition
+        out += identity
+        out = F.relu(out)
+        
+        return out
+\end{lstlisting}
+
+\textbf{Projection Shortcuts}: Ketika dimensi input dan output berbeda (misalnya, jumlah channels atau spatial size), identity shortcut tidak dapat langsung ditambahkan. Dalam kasus ini, projection shortcut menggunakan 1×1 convolution untuk match dimensions:
+\[
+y = F(x, \{W_i\}) + W_s x
+\]
+Di mana $W_s$ adalah projection matrix.
+
+\subsection*{2.4.3 Arsitektur ResNet50}
+ResNet50 adalah varian ResNet dengan 50 weight layers yang diorganisasi dalam arsitektur hierarkis. Struktur detail ResNet50 yang digunakan dalam penelitian ini:
+
+\textbf{Layer 1: Initial Convolution}
+
+\begin{lstlisting}
+Conv2d(3, 64, kernel_size=7, stride=2, padding=3)  # 112×112×64
+BatchNorm2d(64)
+ReLU(inplace=True)
+MaxPool2d(kernel_size=3, stride=2, padding=1)      # 56×56×64
+\end{lstlisting}
+
+Input image 224×224×3 di-reduce menjadi 56×56×64 feature map melalui initial convolution dengan large receptive field (7×7) dan aggressive downsampling (stride=2).
+
+\textbf{Layer 2-5: Stacked Residual Blocks}
+
+ResNet50 menggunakan bottleneck architecture di mana setiap residual block terdiri dari three convolutions: 1×1 → 3×3 → 1×1. Design ini mengurangi computational cost sambil maintaining representational power.
+
+\begin{tabular}{llll}
+\toprule
+Stage     & Output Size & Architecture                          & Repetitions \\
+\midrule
+conv2\_x  & 56×56       & [1×1, 64; 3×3, 64; 1×1, 256] × 3               & 3           \\
+conv3\_x  & 28×28       & [1×1, 128; 3×3, 128; 1×1, 512] × 4             & 4           \\
+conv4\_x  & 14×14       & [1×1, 256; 3×3, 256; 1×1, 1024] × 6            & 6           \\
+conv5\_x  & 7×7         & [1×1, 512; 3×3, 512; 1×1, 2048] × 3            & 3           \\
+\bottomrule
+\end{tabular}
+
+Total: 3 + 4 + 6 + 3 = 16 residual blocks
+
+\textbf{Final Classification Head:}
+
+\begin{lstlisting}
+AdaptiveAvgPool2d((1, 1))  # Global Average Pooling: 7×7×2048 → 1×1×2048
+Linear(2048, num_classes)   # Fully connected layer untuk klasifikasi
+\end{lstlisting}
+
+\textbf{Karakteristik ResNet50:}
+
+\begin{enumerate}
+    \item \textbf{Parameter Efficiency}:
+    \begin{itemize}
+        \item Total parameters: ~25.6 million
+        \item Bottleneck design mengurangi parameters signifikan dibanding plain architecture
+        \item 1×1 convolutions untuk dimensionality reduction dan expansion
+    \end{itemize}
+    
+    \item \textbf{Computational Complexity}:
+    \begin{itemize}
+        \item FLOPs: ~4.1 billion untuk single forward pass
+        \item Relatif mahal tetapi achievable pada modern GPUs
+        \item Training time dalam penelitian: ~2-3 menit per epoch pada GPU
+    \end{itemize}
+    
+    \item \textbf{Receptive Field}:
+    \begin{itemize}
+        \item Layer akhir memiliki very large receptive field yang mencakup hampir entire image
+        \item Memungkinkan model menangkap long-range dependencies
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Performance pada Brain Tumor Classification:}
+
+Dari confusion matrix ResNet50 pada data test:
+
+\begin{lstlisting}
+             precision  recall  f1-score  support
+glioma          0.99      0.95      0.97      300
+meningioma      0.94      0.99      0.97      306
+pituitary       1.00      0.98      0.99      300
+notumor         0.99      0.99      0.99      405
+accuracy                            0.98     1311
+\end{lstlisting}
+
+\textbf{Analisis:}
+
+\begin{itemize}
+    \item Overall accuracy 98\% menunjukkan excellent transfer learning
+    \item Glioma recall 0.95 (slightly lower): Kemungkinan karena visual similarity dengan meningioma
+    \item Pituitary precision 1.00: Distinctive appearance membuat klasifikasi lebih mudah
+    \item No tumor performance excellent: Clear boundary antara tumor dan no tumor cases
+\end{itemize}
+
+Training progression menunjukkan smooth convergence:
+
+\begin{lstlisting}
+Epoch 1/15 | Loss: 0.3029
+Epoch 5/15 | Loss: 0.0783
+Epoch 10/15| Loss: 0.0522
+Epoch 15/15| Loss: 0.0521
+\end{lstlisting}
+
+Loss turun dari 0.30 ke 0.05 dalam 5 epoch, kemudian plateau sekitar 0.05, indicating good convergence tanpa overfitting.
+
+\section*{2.5 Arsitektur EfficientNet}
+EfficientNet, diperkenalkan oleh Tan dan Le (2019) dalam paper ``EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks'', merupakan family of models yang dirancang untuk mencapai state-of-the-art accuracy dengan efisiensi parameter dan komputasi yang superior. Kunci inovasi EfficientNet adalah compound scaling method yang secara sistematis menskalakan network width, depth, dan resolution dengan cara yang terkoordinasi.
+
+\subsection*{2.5.1 Compound Scaling Method}
+Sebelum EfficientNet, scaling up ConvNets biasanya dilakukan dengan menambah salah satu dimensi:
+
+\begin{itemize}
+    \item Width scaling: Menambah jumlah channels (filters) pada setiap layer
+    \item Depth scaling: Menambah jumlah layers
+    \item Resolution scaling: Menggunakan input image resolution yang lebih tinggi
+\end{itemize}
+
+Namun, pendekatan single-dimension scaling ini suboptimal karena mengabaikan interaksi antara ketiga dimensi.
+
+\textbf{Compound Scaling Formula:}
+
+EfficientNet menggunakan compound coefficient $\phi$ untuk scale ketiga dimensi secara uniform:
+\[
+\text{depth: } d = \alpha^\phi \quad \text{width: } w = \beta^\phi \quad \text{resolution: } r = \gamma^\phi
+\]
+
+Dengan constraint: $\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2$ dan $\alpha \geq 1, \beta \geq 1, \gamma \geq 1$
+
+Di mana:
+
+\begin{itemize}
+    \item $\alpha, \beta, \gamma$ adalah constants yang ditentukan melalui small grid search
+    \item $\phi$ adalah user-specified coefficient yang mengontrol available resources
+\end{itemize}
+
+\textbf{Intuisi di balik compound scaling:}
+
+\begin{enumerate}
+    \item Depth scaling meningkatkan kemampuan network menangkap features yang lebih complex dan rich, tetapi diminishing returns setelah certain depth karena vanishing gradient.
+    
+    \item Width scaling meningkatkan kemampuan menangkap fine-grained features, tetapi wide but shallow networks struggle dengan capturing higher-level features.
+    
+    \item Resolution scaling meningkatkan kemampuan capturing fine-grained patterns, tetapi accuracy gain diminishes untuk very high resolutions (computational cost increases quadratically).
+\end{enumerate}
+
+Balancing the three dimensions memaksimalkan model capacity untuk given computational budget.
+
+\textbf{EfficientNet-B0 to B7 Family:}
+
+Menggunakan baseline EfficientNet-B0, family EfficientNet B1-B7 dibuat dengan progressively increasing $\phi$:
+
+\begin{tabular}{lccccc}
+\toprule
+Model & $\phi$ & Depth & Width & Resolution & Parameters & Top-1 Acc \\
+\midrule
+B0    & 1.0 & 1.0   & 1.0   & 224        & 5.3M       & 77.1\% \\
+B1    & 1.1 & 1.1   & 1.0   & 240        & 7.8M       & 79.1\% \\
+B2    & 1.2 & 1.2   & 1.1   & 260        & 9.2M       & 80.1\% \\
+B3    & 1.4 & 1.4   & 1.2    & 300        & 12M        & 81.6\% \\
+B4    & 1.8 & 1.8   & 1.4   & 380        & 19M        & 82.9\% \\
+\bottomrule
+\end{tabular}
+
+EfficientNet-B3, yang digunakan dalam penelitian ini, represent sweet spot antara accuracy dan efficiency:
+
+\begin{itemize}
+    \item Hanya 12M parameters (setengah dari ResNet50)
+    \item Mencapai 81.6\% ImageNet top-1 accuracy (lebih tinggi dari ResNet50's 76.1\%)
+    \item Input resolution 300×300 (didownsample ke 224×224 dalam implementasi untuk consistency)
+\end{itemize}
+
+\subsection*{2.5.2 Mobile Inverted Bottleneck Convolution (MBConv)}
+Building block fundamental EfficientNet adalah MBConv (Mobile Inverted Bottleneck Convolution), yang diadaptasi dari MobileNetV2. MBConv dirancang untuk maximize efficiency melalui beberapa teknik:
+
+\begin{enumerate}
+    \item \textbf{Depthwise Separable Convolutions:}
+    
+    Standard convolution operation: $H × W × C_{in}$ → $(K × K × C_{in}) × C_{out}$ parameters → $H × W × C_{out}$
+    
+    Depthwise separable memisahkan ini menjadi two steps:
+    
+    \textbf{Depthwise Convolution}: Applies single filter per input channel 
+    \[
+    K × K × C_{in} \text{ parameters}
+    \]
+    
+    \textbf{Pointwise Convolution}: 1×1 convolution untuk combine channels 
+    \[
+    1 × 1 × C_{in} × C_{out} \text{ parameters}
+    \]
+    
+    Reduction in parameters:
+    \[
+    \frac{K × K × C_{in} + C_{in} × C_{out}}{K × K × C_{in} × C_{out}} = \frac{1}{C_{out}} + \frac{1}{K^2}
+    \]
+    
+    Untuk $K=3, C_{out}=256$: reduction ~8-9x
+    
+    \item \textbf{Inverted Residual Structure:}
+    
+    Berbeda dengan ResNet bottleneck yang reduces → processes → expands channels, MBConv menggunakan inverted pattern: expands → processes → reduces.
+    
+    \begin{verbatim}
+Input (narrow)
+    ↓
+1×1 Conv Expansion (wide)  ← Expand channels by factor t
+    ↓
+3×3 Depthwise Conv (wide)  ← Spatial processing
+    ↓
+Squeeze-and-Excitation (SE) ← Channel attention
+    ↓
+1×1 Conv Projection (narrow) ← Project back to narrow
+    ↓
+Residual Add (if stride=1)
+    \end{verbatim}
+    
+    Expansion ratio $t$ typically 6, meaning channels are expanded 6x before depthwise convolution.
+    
+    Rationale: Depthwise convolutions memiliki limited expressiveness, sehingga applying them pada higher-dimensional space (setelah expansion) lebih effective.
+    
+    \item \textbf{Squeeze-and-Excitation (SE) Blocks:}
+    
+    SE blocks menambahkan channel attention mechanism untuk recalibrate channel-wise features:
+    \[
+    \text{SE}(X) = X \odot \sigma(W_2 \cdot \text{ReLU}(W_1 \cdot \text{GAP}(X)))
+    \]
+    Di mana:
+    
+    \begin{itemize}
+        \item GAP = Global Average Pooling
+        \item $W_1$ reduces channels by reduction ratio $r$ (typically 4)
+        \item $W_2$ expands back to original channels
+        \item $\sigma$ = Sigmoid activation
+        \item $\odot$ = element-wise multiplication
+    \end{itemize}
+    
+    SE allows network to explicitly model channel interdependencies dan emphasize informative channels.
+\end{enumerate}
+
+\textbf{Complete MBConv Block (k3×3, expansion 6):}
+
+\begin{lstlisting}
+class MBConvBlock(nn.Module):
+    def forward(self, x):
+        identity = x
+        
+        # 1. Expansion
+        out = self._swish(self._bn0(self._expand_conv(x)))
+        
+        # 2. Depthwise convolution
+        out = self._swish(self._bn1(self._depthwise_conv(out)))
+        
+        # 3. Squeeze-and-Excitation
+        squeeze = F.adaptive_avg_pool2d(out, 1)
+        excite = self._swish(self._se_reduce(squeeze))
+        excite = torch.sigmoid(self._se_expand(excite))
+        out = out * excite
+        
+        # 4. Projection
+        out = self._bn2(self._project_conv(out))
+        
+        # 5. Residual connection (if applicable)
+        if self.has_residual:
+            out = out + identity
+            
+        return out
+\end{lstlisting}
+
+\subsection*{2.5.3 Arsitektur EfficientNet-B3}
+EfficientNet-B3 terdiri dari 26 MBConv blocks yang diorganisasi dalam 7 stages dengan gradually increasing channel width dan decreasing spatial resolution.
+
+\textbf{Detailed Architecture:}
+
+\textbf{Stage 0: Stem}
+
+\begin{lstlisting}
+Conv2dStaticSamePadding(3, 40, kernel_size=3, stride=2)  # 150×150×40
+BatchNorm2d(40)
+Swish()
+\end{lstlisting}
+
+\textbf{Stages 1–7: MBConv Blocks}
+
+\begin{tabular}{clcccc}
+\toprule
+Stage & Output Size & Block Type        & Layers & Channels & Stride \\
+\midrule
+1     & 150×150     & MBConv1, k3×3    & 2      & 24       & 1      \\
+2     & 75×75       & MBConv6, k3×3    & 3      & 32       & 2      \\
+3     & 75×75       & MBConv6, k5×5    & 3      & 48       & 1      \\
+4     & 38×38       & MBConv6, k3×3    & 5      & 96       & 2      \\
+5     & 38×38       & MBConv6, k5×5    & 5      & 136      & 1      \\
+6     & 19×19       & MBConv6, k5×5    & 6      & 232      & 2      \\
+7     & 19×19       & MBConv6, k3×3    & 2      & 384      & 1      \\
+\bottomrule
+\end{tabular}
+
+Notasi: MBConv6 = expansion ratio 6, MBConv1 = no expansion
+
+\textbf{Head: Classification}
+
+\begin{lstlisting}
+Conv2dStaticSamePadding(384, 1536, kernel_size=1)  # 19×19×1536
+BatchNorm2d(1536)
+Swish()
+AdaptiveAvgPool2d(1)  # Global pooling → 1×1×1536
+Dropout(0.3)
+Linear(1536, 4)  # Classification
+\end{lstlisting}
+
+\textbf{Key Characteristics:}
+
+\begin{enumerate}
+    \item \textbf{Progressive Downsampling:}
+    \begin{itemize}
+        \item Input: 224×224
+        \item After stage 2: 75×75
+        \item After stage 4: 38×38
+        \item After stage 6: 19×19
+        \item Total downsampling: 32x
+    \end{itemize}
+    
+    \item \textbf{Channel Expansion:}
+    \begin{itemize}
+        \item Start: 40 channels
+        \item End: 1536 channels
+        \item Gradual increase memungkinkan low-level features remain detailed while high-level features become more abstract
+    \end{itemize}
+    
+    \item \textbf{Variable Kernel Sizes:}
+    \begin{itemize}
+        \item Stages 3, 5, 6 use 5×5 kernels untuk larger receptive fields
+        \item Stages 1, 2, 4, 7 use 3×3 kernels untuk efficiency
+        \item Adaptive receptive field sizes optimize feature extraction
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Performance Analysis:}
+
+Training progression EfficientNet-B3:
+
+\begin{verbatim}
+Epoch 1/15 | Loss: 0.4129
+Epoch 5/15 | Loss: 0.0559
+Epoch 10/15 | Loss: 0.0247
+Epoch 15/15 | Loss: 0.0191
+\end{verbatim}
+
+Faster convergence dibanding ResNet50 (0.41 → 0.02 vs 0.30 → 0.05), suggesting more effective feature learning.
+
+\textbf{Test Performance:}
+
+\begin{verbatim}
+Confusion Matrix:
+[[298   2   0   0]   glioma
+ [  0 306   0   0]   meningioma
+ [  0   2 298   0]   pituitary
+ [  0   0   0 405]]  notumor
+
+Precision/Recall/F1:
+glioma:       1.00 / 0.99 / 1.00
+meningioma:   0.99 / 1.00 / 0.99
+pituitary:    1.00 / 0.99 / 1.00
+notumor:      1.00 / 1.00 / 1.00
+Accuracy: 99.7%
+\end{verbatim}
+
+\textbf{Analisis:}
+
+\begin{itemize}
+    \item Near-perfect accuracy (99.7\%) pada MRI brain tumor classification
+    \item Only 4 misclassifications total dari 1311 samples
+    \item 2 glioma misclassified sebagai meningioma (likely overlapping appearance)
+    \item 2 pituitary misclassified sebagai meningioma
+    \item Perfect no-tumor classification: Sangat penting secara klinis
+\end{itemize}
+
+\textbf{Efficiency Comparison:}
+
+\begin{tabular}{lccc}
+\toprule
+Metric            & ResNet50     & EfficientNet-B3 \\
+\midrule
+Parameters        & 25.6M       & 12M            \\
+Accuracy          & 98.0\%      & 99.7\%         \\
+Training time/epoch & ~3 min     & ~2.5 min       \\
+Inference time/image & ~15ms      & ~12ms          \\
+\bottomrule
+\end{tabular}
+
+EfficientNet-B3 achieves higher accuracy dengan fewer parameters dan faster inference, demonstrating superior efficiency.
+
+\section*{2.6 Hybrid Models: Menggabungkan Kekuatan Multi-Arsitektur}
+Hybrid models menggabungkan multiple architectures untuk leverage complementary strengths dan achieve better performance daripada individual models. Dalam penelitian ini, hybrid model menggabungkan EfficientNet-B3 dan ResNet50 melalui feature-level fusion.
+
+\textbf{Motivation untuk Hybrid Architecture:}
+
+\begin{enumerate}
+    \item \textbf{Complementary Feature Representations:}
+    \begin{itemize}
+        \item ResNet: Deep residual learning captures complex hierarchical features with strong gradient flow
+        \item EfficientNet: Efficient compound-scaled architecture with SE attention dan inverted bottlenecks
+        \item Combining keduanya dapat capture richer feature representations
+    \end{itemize}
+    
+    \item \textbf{Implicit Ensemble Effect:}
+    \begin{itemize}
+        \item Ensemble of multiple models proven meningkatkan robustness dan generalization
+        \item Feature fusion creates implicit ensemble tanpa inference overhead dari multiple forward passes
+        \item Reduces variance in predictions
+    \end{itemize}
+    
+    \item \textbf{Robustness to Domain Shift:}
+    \begin{itemize}
+        \item Different architectures may handle domain variations differently
+        \item Hybrid model potentially more robust terhadap distribution shifts (MRI vs CT)
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Architecture Design:}
+
+\begin{lstlisting}
+class HybridNet(nn.Module):
+    def __init__(self, num_classes=4):
+        super().__init__()
+        
+        # Backbone 1: EfficientNet-B3
+        self.effnet = EfficientNet.from_pretrained('efficientnet-b3')
+        effnet_out = 1536  # Output features from EfficientNet
+        self.effnet._fc = nn.Identity()  # Remove classifier
+        
+        # Backbone 2: ResNet50
+        self.resnet = models.resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+        resnet_out = 2048  # Output features from ResNet
+        self.resnet.fc = nn.Identity()  # Remove classifier
+        
+        # Fusion Classifier
+        self.fc = nn.Sequential(
+            nn.Linear(effnet_out + resnet_out, 512),  # 1536 + 2048 = 3584
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(512, num_classes)
+        )
+    
+    def forward(self, x):
+        # Extract features dari kedua backbones
+        feat_eff = self.effnet(x)  # [batch, 1536]
+        feat_res = self.resnet(x)  # [batch, 2048]
+        
+        # Concatenate features
+        combined = torch.cat((feat_eff, feat_res), dim=1)  # [batch, 3584]
+        
+        # Final classification
+        output = self.fc(combined)  # [batch, 4]
+        
+        return output
+\end{lstlisting}
+
+\textbf{Design Choices:}
+
+\begin{enumerate}
+    \item \textbf{Late Fusion Strategy}: Features dikombinasikan setelah fully extracted oleh masing-masing backbone, bukan pada intermediate layers. Ini memungkinkan setiap backbone fully express learned representations.
+    
+    \item \textbf{Concatenation vs Addition}: Concatenation dipilih over element-wise addition karena:
+    \begin{itemize}
+        \item Preserves all information dari kedua streams
+        \item Allows fusion layer untuk learn weighted combinations
+        \item More flexible than fixed addition
+    \end{itemize}
+    
+    \item \textbf{Fusion MLP}: Two-layer MLP dengan bottleneck (3584 → 512 → 4):
+    \begin{itemize}
+        \item ReLU activation untuk nonlinearity
+        \item Dropout 0.3 untuk regularization
+        \item Reduces dimensionality sebelum final classification
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Training Strategy:}
+
+\begin{lstlisting}
+optimizer = optim.AdamW(model.parameters(), lr=1e-4)
+criterion = nn.CrossEntropyLoss()
+
+for epoch in range(15):
+    for images, labels in train_loader:
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+\end{lstlisting}
+
+Both backbones di-fine-tune jointly:
+
+\begin{itemize}
+    \item Gradient flows through kedua branches
+    \item Backbones adapt to work synergistically
+    \item Fusion layer learns optimal feature combination
+\end{itemize}
+
+\textbf{Performance Results:}
+
+\textbf{MRI Test Set:}
+
+\begin{verbatim}
+Confusion Matrix:
+[[297   3   0   0]
+ [  0 306   0   0]
+ [  0   0 300   0]
+ [  0   0   0 405]]
+
+Classification Report:
+              precision  recall  f1-score  support
+glioma           1.00     0.99      0.99      300
+meningioma       0.98     1.00      0.99      306
+pituitary        1.00     1.00      1.00      300
+notumor          1.00     1.00      1.00      405
+accuracy                            1.00     1311
+\end{verbatim}
+
+\textbf{Analisis:}
+
+\begin{itemize}
+    \item Accuracy: 99.77\% (1308/1311 correct)
+    \item Hanya 3 misclassifications (3 glioma → meningioma)
+    \item Perfect classification untuk pituitary dan no-tumor
+    \item Comparable dengan EfficientNet-B3 standalone
+\end{itemize}
+
+\textbf{CT Test Set (Domain Shift Test):}
+
+\begin{verbatim}
+Accuracy: 45.78%
+              precision  recall  f1-score
+Healthy         0.47     0.64      0.54
+Tumor           0.44     0.28      0.34
+\end{verbatim}
+
+Surprisingly, hybrid model performs worse pada CT data dibanding individual models:
+
+\begin{itemize}
+    \item ResNet50: 57.43\%
+    \item EfficientNet-B3: 54.66\%
+    \item Hybrid: 45.78\%
+\end{itemize}
+
+\textbf{Analysis of Results:}
+
+\textbf{Why Hybrid Doesn't Improve MRI Performance?}
+
+\begin{enumerate}
+    \item \textbf{Ceiling Effect}: Individual models already achieve ~99.7\% accuracy, leaving minimal room untuk improvement
+    \item \textbf{Data Simplicity}: Brain MRI tumor classification mungkin insufficient complex untuk benefit dari multi-architecture fusion
+    \item \textbf{Redundancy}: Both backbones pretrained on ImageNet may learn similar features for this task
+\end{enumerate}
+
+\textbf{Why Hybrid Degrades CT Performance?}
+
+\begin{enumerate}
+    \item \textbf{Conflicting Adaptations}: Ketika domain shift significant (MRI → CT), different backbones adapt differently, dan fusion layer kesulitan reconcile conflicting signals
+    \item \textbf{Overfitting to MRI}: Training pada MRI-only data membuat fusion layer overfit ke MRI-specific patterns. When tested on CT, learned fusion strategy breaks down.
+    \item \textbf{Increased Capacity Without Benefit}: Extra parameters (37.6M vs 25.6M/12M) provide more capacity to overfit tanpa corresponding benefit pada out-of-distribution data.
+    \item \textbf{Loss of Individual Strength}: Ensemble biasanya works best ketika base models make different types of errors. Jika both models struggle dengan CT equally, combining them doesn't help dan malah introduces additional complexity.
+\end{enumerate}
+
+\textbf{Computational Overhead:}
+
+\begin{tabular}{lccc}
+\toprule
+Model             & Parameters & FLOPs & Inference Time \\
+\midrule
+ResNet50         & 25.6M   & 4.1G  & 15ms \\
+EfficientNet-B3   & 12M      & 1.8G  & 12ms \\
+Hybrid            & 37.6M   & 5.9G  & 24ms \\
+\bottomrule
+\end{tabular}
+
+Hybrid model requires 2× inference time dengan no improvement pada MRI dan degraded performance pada CT.
+
+\textbf{Conclusion dan Recommendations:}
+
+\begin{enumerate}
+    \item \textbf{For MRI Classification}: EfficientNet-B3 standalone adalah optimal choice:
+    \begin{itemize}
+        \item Highest accuracy (99.7\%)
+        \item Most efficient (12M params, 12ms inference)
+        \item Simpler architecture
+    \end{itemize}
+    
+    \item \textbf{For Robust Medical Imaging}: Simple fusion insufficient untuk handle domain shift. Future work should explore:
+    \begin{itemize}
+        \item Domain adaptation techniques
+        \item Multi-domain training (train jointly on MRI + CT)
+        \item Attention-based fusion yang adaptive berdasarkan input modality
+        \item Task-specific backbones pretrained on medical images
+    \end{itemize}
+    
+    \item \textbf{Hybrid Architectures Work Best When:}
+    \begin{itemize}
+        \item Base models have complementary strengths
+        \item Task complexity benefits dari multi-scale features
+        \item Training data sufficient untuk avoid overfitting
+        \item Domain shift minimal
+    \end{itemize}
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Verifikasi Data KTP{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-image"></i> Foto KTP</h5>
+                </div>
+                <div class="card-body">
+                    {% if ktp_image_data %}
+                        <img src="data:image/jpeg;base64,{{ ktp_image_data }}" alt="KTP" class="img-fluid rounded">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-check-circle"></i> Verifikasi Data</h5>
+                </div>
+                
+                <div class="card-body">
+                    <p class="text-muted mb-3">
+                        Data berikut telah diekstrak dari KTP Anda menggunakan OCR & AI. 
+                        Silakan verifikasi dan ubah jika diperlukan sebelum menyimpan.
+                    </p>
+                    
+                    <form method="post" class="needs-validation">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_nik" class="form-label">NIK (Nomor Induk Kependudukan)</label>
+                            <input type="text" class="form-control" id="id_nik" name="nik" 
+                                   value="{{ extracted.nik|default:'' }}" required>
+                            <small class="text-muted">16 digit NIK</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_nama" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="id_nama" name="nama" 
+                                   value="{{ extracted.nama|default:'' }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_ttl" class="form-label">Tempat, Tanggal Lahir</label>
+                            <input type="text" class="form-control" id="id_ttl" name="ttl" 
+                                   value="{{ extracted.ttl|default:'' }}" 
+                                   placeholder="Contoh: Jakarta, 01-01-1990" required>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_jk" class="form-label">Jenis Kelamin</label>
+                                    <select class="form-control" id="id_jk" name="jk" required>
+                                        <option value="">-- Pilih --</option>
+                                        <option value="LAKI-LAKI" {% if extracted.jenis_kelamin == 'LAKI-LAKI' %}selected{% endif %}>
+                                            Laki-Laki
+                                        </option>
+                                        <option value="PEREMPUAN" {% if extracted.jenis_kelamin == 'PEREMPUAN' %}selected{% endif %}>
+                                            Perempuan
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_status_perkawinan" class="form-label">Status Perkawinan</label>
+                                    <select class="form-control" id="id_status_perkawinan" name="status_perkawinan" required>
+                                        <option value="">-- Pilih --</option>
+                                        <option value="BELUM KAWIN" {% if extracted.status_perkawinan == 'BELUM KAWIN' %}selected{% endif %}>
+                                            Belum Kawin
+                                        </option>
+                                        <option value="KAWIN" {% if extracted.status_perkawinan == 'KAWIN' %}selected{% endif %}>
+                                            Kawin
+                                        </option>
+                                        <option value="CERAI HIDUP" {% if extracted.status_perkawinan == 'CERAI HIDUP' %}selected{% endif %}>
+                                            Cerai Hidup
+                                        </option>
+                                        <option value="CERAI MATI" {% if extracted.status_perkawinan == 'CERAI MATI' %}selected{% endif %}>
+                                            Cerai Mati
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_alamat" class="form-label">Alamat Lengkap</label>
+                            <textarea class="form-control" id="id_alamat" name="alamat" rows="3" required>{{ extracted.alamat|default:'' }}</textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Simpan & Lanjutkan
+                            </button>
+                            <a href="{% url 'pencaker:upload_ktp' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Upload KTP Lagi
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

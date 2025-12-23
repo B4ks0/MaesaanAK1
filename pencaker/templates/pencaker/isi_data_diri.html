@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Isi Data Diri Lengkap{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-edit"></i> Lengkapi Data Diri Anda</h4>
+                </div>
+                
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <p class="text-muted mb-4">
+                        Data dari KTP sudah tersimpan. Silakan lengkapi informasi tambahan di bawah ini.
+                    </p>
+                    
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Data dari KTP (Read-only) -->
+                        <fieldset class="mb-4">
+                            <legend class="form-label">Data dari KTP (Read-Only)</legend>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_nik" class="form-label">NIK</label>
+                                        <input type="text" class="form-control" id="id_nik" name="nik" 
+                                               value="{{ form.instance.nik }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_nama" class="form-label">Nama Lengkap</label>
+                                        <input type="text" class="form-control" id="id_nama" name="nama" 
+                                               value="{{ form.instance.nama }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="id_ttl" class="form-label">Tempat, Tgl Lahir</label>
+                                        <input type="text" class="form-control" id="id_ttl" name="ttl" 
+                                               value="{{ form.instance.ttl }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label for="id_jk" class="form-label">Jenis Kelamin</label>
+                                        <input type="text" class="form-control" id="id_jk" 
+                                               value="{{ form.instance.get_jk_display }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label for="id_status_perkawinan" class="form-label">Status Perkawinan</label>
+                                        <input type="text" class="form-control" id="id_status_perkawinan" 
+                                               value="{{ form.instance.get_status_perkawinan_display }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_alamat" class="form-label">Alamat</label>
+                                <textarea class="form-control" id="id_alamat" rows="2" readonly>{{ form.instance.alamat }}</textarea>
+                            </div>
+                        </fieldset>
+                        
+                        <!-- Data Tambahan (Editable) -->
+                        <fieldset class="mb-4">
+                            <legend class="form-label">Data Tambahan</legend>
+                            
+                            <div class="mb-3">
+                                <label for="id_pendidikan" class="form-label">Pendidikan Terakhir</label>
+                                <input type="text" class="form-control" id="id_pendidikan" name="pendidikan" 
+                                       value="{{ form.instance.pendidikan|default:'' }}" 
+                                       placeholder="Contoh: S1 Teknik Informatika">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_keahlian" class="form-label">Keahlian / Skills</label>
+                                <textarea class="form-control" id="id_keahlian" name="keahlian" rows="3"
+                                          placeholder="Sebutkan keahlian Anda (misal: Python, JavaScript, SQL, dll)">{{ form.instance.keahlian|default:'' }}</textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_pengalaman" class="form-label">Pengalaman Kerja</label>
+                                <textarea class="form-control" id="id_pengalaman" name="pengalaman" rows="4"
+                                          placeholder="Deskripsikan pengalaman kerja Anda">{{ form.instance.pengalaman|default:'' }}</textarea>
+                            </div>
+                        </fieldset>
+                        
+                        <!-- File Upload -->
+                        <fieldset class="mb-4">
+                            <legend class="form-label">Unggah Dokumen Pendukung</legend>
+                            
+                            <div class="mb-3">
+                                <label for="id_ktp" class="form-label">Foto KTP (Optional)</label>
+                                <input type="file" class="form-control" id="id_ktp" name="ktp" accept="image/*">
+                                <small class="text-muted">Format: JPG, PNG | Ukuran maks: 5MB</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_photo" class="form-label">Foto Profil (Optional)</label>
+                                <input type="file" class="form-control" id="id_photo" name="photo" accept="image/*">
+                                <small class="text-muted">Format: JPG, PNG | Ukuran maks: 5MB</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_ijazah" class="form-label">Ijazah / Sertifikat (Optional)</label>
+                                <input type="file" class="form-control" id="id_ijazah" name="ijazah" accept=".pdf,image/*">
+                                <small class="text-muted">Format: PDF, JPG, PNG | Ukuran maks: 5MB</small>
+                            </div>
+                        </fieldset>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Simpan Data Diri
+                            </button>
+                            <a href="{% url 'pencaker:dashboard' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

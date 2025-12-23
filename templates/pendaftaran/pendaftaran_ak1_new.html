@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+
+{% block title %}Pendaftaran AK1 - MAESAAN{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 40px auto; padding: 0 20px;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="color: #333; font-size: 28px; margin: 0 0 10px 0;">
+            <i class="fas fa-id-card" style="color: #667eea; margin-right: 10px;"></i>
+            Pendaftaran Kartu Pencari Kerja AK1
+        </h1>
+        <p style="color: #666; margin: 0; font-size: 14px;">
+            Lengkapi formulir di bawah untuk mendapatkan Kartu Pencari Kerja AK1
+        </p>
+    </div>
+
+    <!-- Messages -->
+    <div id="messages-container"></div>
+
+    <!-- Form -->
+    <form method="post" enctype="multipart/form-data" id="registration-form" style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 20px rgba(0,0,0,0.08);">
+        {% csrf_token %}
+
+        <!-- Step 1: KTP Upload -->
+        <div style="margin-bottom: 40px;">
+            <h2 style="font-size: 16px; color: #333; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+                📄 Langkah 1: Upload KTP
+            </h2>
+
+            <div style="background: #f8f9ff; border: 2px dashed #667eea; border-radius: 8px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease;" id="ktp-upload-area">
+                <div style="font-size: 40px; margin-bottom: 10px;">📸</div>
+                <p style="margin: 0 0 5px 0; font-weight: 600; color: #333;">Klik untuk upload KTP atau Drag & Drop</p>
+                <p style="margin: 0; color: #999; font-size: 13px;">Format: JPG/PNG | Maksimal: 5MB</p>
+                {{ form.ktp }}
+                <input type="hidden" name="ktp" id="ktp-input">
+            </div>
+            <div id="ktp-status" style="margin-top: 10px; font-size: 13px;"></div>
+        </div>
+
+        <!-- Step 2: Personal Data (Auto-filled from KTP) -->
+        <div style="margin-bottom: 40px;">
+            <h2 style="font-size: 16px; color: #333; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+                👤 Langkah 2: Data Pribadi (dari KTP)
+            </h2>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">NIK *</label>
+                    {{ form.nik }}
+                    <style>
+                        #id_nik { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: monospace; }
+                        #id_nik:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                    </style>
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Nama Lengkap *</label>
+                    {{ form.nama }}
+                    <style>
+                        #id_nama { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+                        #id_nama:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                    </style>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Tempat, Tgl Lahir *</label>
+                    {{ form.ttl }}
+                    <style>
+                        #id_ttl { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+                        #id_ttl:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                    </style>
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Jenis Kelamin *</label>
+                    {{ form.jk }}
+                    <style>
+                        #id_jk { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+                        #id_jk:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                    </style>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Status Perkawinan *</label>
+                {{ form.status_perkawinan }}
+                <style>
+                    #id_status_perkawinan { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+                    #id_status_perkawinan:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                </style>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Alamat Lengkap *</label>
+                {{ form.alamat }}
+                <style>
+                    #id_alamat { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: Arial; min-height: 80px; }
+                    #id_alamat:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                </style>
+            </div>
+        </div>
+
+        <!-- Step 3: Additional Documents -->
+        <div style="margin-bottom: 40px;">
+            <h2 style="font-size: 16px; color: #333; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+                📎 Langkah 3: Dokumen Pendukung
+            </h2>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 13px;">
+                    📷 Foto Diri (Opsional)
+                </label>
+                <div style="background: #f8f9ff; border: 1px dashed #ddd; border-radius: 6px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" class="file-upload-simple" id="photo-upload">
+                    <p style="margin: 0; color: #666; font-size: 13px;">Klik untuk upload foto (JPG/PNG, max 2MB)</p>
+                    {{ form.photo }}
+                    <div id="photo-status" style="margin-top: 8px; font-size: 12px;"></div>
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 13px;">
+                    📄 Ijazah/Sertifikat (Opsional)
+                </label>
+                <div style="background: #f8f9ff; border: 1px dashed #ddd; border-radius: 6px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" class="file-upload-simple" id="ijazah-upload">
+                    <p style="margin: 0; color: #666; font-size: 13px;">Klik untuk upload ijazah (PDF/JPG/PNG, max 5MB)</p>
+                    {{ form.ijazah }}
+                    <div id="ijazah-status" style="margin-top: 8px; font-size: 12px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Optional Info -->
+        <div style="margin-bottom: 40px;">
+            <h2 style="font-size: 16px; color: #333; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #667eea;">
+                💼 Langkah 4: Informasi Tambahan (Opsional)
+            </h2>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Pendidikan Terakhir</label>
+                {{ form.pendidikan }}
+                <style>
+                    #id_pendidikan { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+                    #id_pendidikan:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                </style>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Keahlian/Keterampilan</label>
+                {{ form.keahlian }}
+                <style>
+                    #id_keahlian { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; min-height: 60px; }
+                    #id_keahlian:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                </style>
+            </div>
+
+            <div>
+                <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px; font-size: 13px;">Pengalaman Kerja</label>
+                {{ form.pengalaman }}
+                <style>
+                    #id_pengalaman { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; min-height: 60px; }
+                    #id_pengalaman:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+                </style>
+            </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 40px;">
+            <button type="submit" id="submit-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                ✓ Kirim Pendaftaran
+            </button>
+            <a href="{% url 'dashboard' %}" style="background: #f0f0f0; color: #333; padding: 14px 20px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-align: center; text-decoration: none;">
+                ← Batal
+            </a>
+        </div>
+
+        <p style="text-align: center; color: #999; font-size: 12px; margin-top: 20px;">
+            * Wajib diisi
+        </p>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registration-form');
+    const submitBtn = document.getElementById('submit-btn');
+    let isSubmitting = false;
+
+    // ========== File Upload Handling ==========
+    function setupFileUpload(uploadAreaId, inputSelector, statusId, maxSize) {
+        const uploadArea = document.getElementById(uploadAreaId);
+        const fileInput = uploadArea.querySelector(inputSelector);
+        const statusDiv = document.getElementById(statusId);
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > maxSize) {
+                    statusDiv.innerHTML = '❌ File terlalu besar';
+                    statusDiv.style.color = '#f44336';
+                    fileInput.value = '';
+                } else {
+                    statusDiv.innerHTML = `✅ ${file.name}`;
+                    statusDiv.style.color = '#4caf50';
+                }
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = '#f0e6ff';
+            uploadArea.style.borderColor = '#764ba2';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = '#f8f9ff';
+            uploadArea.style.borderColor = '#ddd';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = '#f8f9ff';
+            uploadArea.style.borderColor = '#ddd';
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+    }
+
+    // Setup file uploads
+    setupFileUpload('ktp-upload-area', 'input[name="ktp"]', 'ktp-status', 5 * 1024 * 1024); // 5MB
+    setupFileUpload('photo-upload', 'input[name="photo"]', 'photo-status', 2 * 1024 * 1024); // 2MB
+    setupFileUpload('ijazah-upload', 'input[name="ijazah"]', 'ijazah-status', 5 * 1024 * 1024); // 5MB
+
+    // ========== Form Submission ==========
+    form.addEventListener('submit', (e) => {
+        if (isSubmitting) {
+            e.preventDefault();
+            return;
+        }
+
+        // Validate required fields
+        const requiredFields = ['nik', 'nama', 'ttl', 'jk', 'alamat'];
+        let firstInvalid = null;
+
+        requiredFields.forEach(fieldName => {
+            const input = document.querySelector(`[name="${fieldName}"]`);
+            if (!input.value || input.value.trim() === '') {
+                input.style.borderColor = '#f44336';
+                if (!firstInvalid) firstInvalid = input;
+            } else {
+                input.style.borderColor = '#ddd';
+            }
+        });
+
+        if (firstInvalid) {
+            e.preventDefault();
+            showMessage('❌ Silakan lengkapi semua field yang wajib diisi', 'error');
+            firstInvalid.focus();
+            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
+
+        // Show loading state
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.6';
+        submitBtn.innerHTML = '⏳ Mengirim...';
+    });
+
+    // ========== Message Display ==========
+    function showMessage(text, type) {
+        const container = document.getElementById('messages-container');
+        const colors = {
+            'success': '#4caf50',
+            'error': '#f44336',
+            'warning': '#ff9800'
+        };
+
+        const msg = document.createElement('div');
+        msg.style.cssText = `
+            background: ${colors[type] || '#667eea'};
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease-out;
+        `;
+        msg.textContent = text;
+        container.appendChild(msg);
+
+        setTimeout(() => msg.remove(), 5000);
+    }
+
+    // ========== KTP OCR Processing ==========
+    const ktpInput = document.querySelector('input[name="ktp"]');
+    if (ktpInput) {
+        ktpInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                showMessage('🤖 Memproses KTP dengan OCR...', 'warning');
+                
+                const formData = new FormData();
+                formData.append('ktp_image', file);
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch('/pendaftaran/process-ktp-ocr/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-CSRFToken': csrfToken }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        if (data.data.nik) document.querySelector('[name="nik"]').value = data.data.nik;
+                        if (data.data.nama) document.querySelector('[name="nama"]').value = data.data.nama;
+                        if (data.data.ttl) document.querySelector('[name="ttl"]').value = data.data.ttl;
+                        if (data.data.jk) document.querySelector('[name="jk"]').value = data.data.jk;
+                        if (data.data.alamat) document.querySelector('[name="alamat"]').value = data.data.alamat;
+                        showMessage('✅ Data KTP berhasil diproses dan diisi otomatis', 'success');
+                    } else {
+                        showMessage('⚠️ OCR tidak tersedia, silakan isi manual', 'warning');
+                    }
+                })
+                .catch(err => {
+                    showMessage('⚠️ OCR tidak tersedia, silakan isi manual', 'warning');
+                });
+            }
+        });
+    }
+});
+
+// Add CSS animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .file-upload-simple { transition: all 0.3s ease; }
+    .file-upload-simple:hover { background: #f0e6ff; }
+`;
+document.head.appendChild(style);
+</script>
+
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - MAESAAN{% endblock %}
+
+{% block content %}
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-tachometer-alt"></i>
+        </div>
+        <div class="card-title">Dashboard - Selamat Datang, {{ user.nama_lengkap }}</div>
+    </div>
+    <p>Sistem Layanan Digital Kartu Pencari Kerja (AK1)</p>
+</div>
+
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="card-title">Informasi Akun</div>
+    </div>
+    <div class="status-info">
+        <div class="status-item">
+            <div class="status-label">Nama Lengkap</div>
+            <div class="status-value">{{ user.nama_lengkap }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Email</div>
+            <div class="status-value">{{ user.email }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Tanggal Registrasi</div>
+            <div class="status-value">{{ user.date_joined|date:"d M Y" }}</div>
+        </div>
+    </div>
+</div>
+
+{% if status %}
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-id-card"></i>
+        </div>
+        <div class="card-title">Status Pendaftaran AK1</div>
+    </div>
+    <div class="status-info">
+        <div class="status-item">
+            <div class="status-label">Status</div>
+            <div class="status-value">
+                {% if status == 'pending' %}
+                    <span style="color: #ffc107;"><i class="fas fa-clock"></i> Menunggu Verifikasi</span>
+                {% elif status == 'diverifikasi' %}
+                    <span style="color: #28a745;"><i class="fas fa-check-circle"></i> Sudah Diverifikasi</span>
+                {% elif status == 'ditolak' %}
+                    <span style="color: #dc3545;"><i class="fas fa-times-circle"></i> Ditolak</span>
+                {% endif %}
+            </div>
+        </div>
+        {% if pendaftaran %}
+        <div class="status-item">
+            <div class="status-label">NIK</div>
+            <div class="status-value">{{ pendaftaran.nik }}</div>
+        </div>
+        <div class="status-item">
+            <div class="status-label">Nama</div>
+            <div class="status-value">{{ pendaftaran.nama }}</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="card fade-in-up">
+    <div class="card-header">
+        <div class="card-icon">
+            <i class="fas fa-tasks"></i>
+        </div>
+        <div class="card-title">Menu Utama</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="{% url 'pendaftaran' %}" class="btn btn-primary" style="text-align: center; padding: 20px;">
+            <i class="fas fa-plus-circle" style="display: block; font-size: 2em; margin-bottom: 10px;"></i>
+            Daftar AK1
+        </a>
+        {% if status == 'diverifikasi' %}
+        <a href="{% url 'kartu_ak1' %}" class="btn btn-primary" style="text-align: center; padding: 20px;">
+            <i class="fas fa-id-card" style="display: block; font-size: 2em; margin-bottom: 10px;"></i>
+            Lihat Kartu AK1
+        </a>
+        {% endif %}
+        <a href="{% url 'status_pendaftaran' %}" class="btn btn-primary" style="text-align: center; padding: 20px;">
+            <i class="fas fa-search" style="display: block; font-size: 2em; margin-bottom: 10px;"></i>
+            Status Pendaftaran
+        </a>
+        <a href="{% url 'profil' %}" class="btn btn-outline" style="text-align: center; padding: 20px;">
+            <i class="fas fa-user-edit" style="display: block; font-size: 2em; margin-bottom: 10px;"></i>
+            Edit Profil
+        </a>
+    </div>
+</div>
+{% endblock %}

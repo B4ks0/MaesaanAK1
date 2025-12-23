@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Pendaftaran - {{ obj.nama }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Review Pendaftaran: {{ obj.nama }}</h2>
+        <span class="status-badge status-{{ obj.status }}">{{ obj.get_status_display }}</span>
+    </div>
+
+    <div class="card-body">
+        <div class="registrant-info">
+            <h4>Informasi Pendaftar</h4>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>NIK:</label>
+                    <span>{{ obj.nik }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Nama Lengkap:</label>
+                    <span>{{ obj.nama }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Tempat Tanggal Lahir:</label>
+                    <span>{{ obj.ttl }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Jenis Kelamin:</label>
+                    <span>{{ obj.jk }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Status Perkawinan:</label>
+                    <span>{{ obj.status_perkawinan }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Agama:</label>
+                    <span>{{ obj.agama }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Pendidikan:</label>
+                    <span>{{ obj.pendidikan }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Alamat:</label>
+                    <span>{{ obj.alamat }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Keahlian:</label>
+                    <span>{{ obj.keahlian }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Pengalaman:</label>
+                    <span>{{ obj.pengalaman }}</span>
+                </div>
+            </div>
+        </div>
+
+        {% if obj.ktp_data %}
+        <div class="ktp-preview">
+            <h4>Preview KTP</h4>
+            <img src="data:image/jpeg;base64,{{ obj.ktp_data }}" alt="KTP" style="max-width:400px; border:2px solid #ddd; border-radius:5px;"/>
+        </div>
+        {% endif %}
+
+        {% if obj.photo_data %}
+        <div class="photo-preview">
+            <h4>Preview Foto</h4>
+            <img src="data:image/jpeg;base64,{{ obj.photo_data }}" alt="Foto" style="max-width:300px; border:2px solid #ddd; border-radius:5px;"/>
+        </div>
+        {% endif %}
+
+        <hr style="margin: 30px 0;"/>
+
+        <form method="POST" class="review-form" id="reviewForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="comment"><strong>Komentar/Catatan (opsional):</strong></label>
+                <textarea name="comment" id="comment" class="form-control" rows="4" placeholder="Tuliskan alasan penolakan atau catatan lainnya...">{{ obj.review_comment }}</textarea>
+            </div>
+
+            <div class="action-buttons" style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                <button type="submit" name="action" value="approve" class="btn btn-success btn-lg" id="approveBtn">
+                    <i class="fas fa-check-circle"></i> SETUJUI
+                </button>
+                <button type="submit" name="action" value="reject" class="btn btn-danger btn-lg" id="rejectBtn">
+                    <i class="fas fa-times-circle"></i> TOLAK
+                </button>
+                <a href="{% url 'list_pendaftaran' %}" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                {% if obj.status == 'diverifikasi' %}
+                <a href="{% url 'download_kartu_pdf' obj.pk %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-download"></i> Download Kartu AK1
+                </a>
+                {% endif %}
+            </div>
+
+            <div id="statusMessage" style="display: none; margin-top: 20px; padding: 15px; background: #e8f4f8; border-radius: 5px; border-left: 4px solid #0066cc; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 10px;">⏳</div>
+                <p id="statusText" style="margin: 0; color: #0066cc; font-weight: bold;">Sedang memproses keputusan Anda...</p>
+            </div>
+        </form>
+
+        {% if obj.reviewed_by %}
+        <div class="review-history" style="margin-top: 30px; padding: 15px; background: #f9f9f9; border-radius: 5px; border-left: 4px solid #007bff;">
+            <h5>Riwayat Review</h5>
+            <p><strong>Direviu oleh:</strong> {{ obj.reviewed_by.nama_lengkap }} ({{ obj.reviewed_by.email }})</p>
+            <p><strong>Tanggal Review:</strong> {{ obj.reviewed_at|date:"d-m-Y H:i" }}</p>
+            {% if obj.review_comment %}
+            <p><strong>Catatan:</strong></p>
+            <p style="margin: 10px 0; padding: 10px; background: white; border-radius: 3px;">{{ obj.review_comment }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.registrant-info {
+    margin-bottom: 30px;
+}
+
+.registrant-info h4 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 5px;
+    border-left: 3px solid #007bff;
+}
+
+.info-item label {
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.info-item span {
+    color: #555;
+    word-break: break-word;
+}
+
+.ktp-preview, .photo-preview {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 5px;
+}
+
+.ktp-preview h4, .photo-preview h4 {
+    margin-bottom: 15px;
+}
+
+.review-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.action-buttons button, .action-buttons a {
+    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #28a745 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-danger:hover {
+    background-color: #dc3545 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.status-badge.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.status-diverifikasi {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.status-ditolak {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.review-history {
+    border: 1px solid #dee2e6;
+}
+</style>
+
+<script>
+// Wait for DOM to fully load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Review form script loaded');
+    
+    const form = document.getElementById('reviewForm');
+    const approveBtn = document.getElementById('approveBtn');
+    const rejectBtn = document.getElementById('rejectBtn');
+    const statusMessage = document.getElementById('statusMessage');
+    
+    // Prevent form submission with Enter key in textarea
+    const comment = document.getElementById('comment');
+    comment.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            // Allow Ctrl+Enter, but don't submit
+            e.preventDefault();
+        }
+    });
+    
+    // Approve button handler
+    approveBtn.addEventListener('click', function(e) {
+        console.log('Approve button clicked');
+        e.preventDefault();
+        showStatus('Sedang menyetujui pendaftaran...');
+        setTimeout(() => {
+            form.submit();
+        }, 500);
+    });
+    
+    // Reject button handler
+    rejectBtn.addEventListener('click', function(e) {
+        console.log('Reject button clicked');
+        e.preventDefault();
+        showStatus('Sedang menolak pendaftaran...');
+        setTimeout(() => {
+            form.submit();
+        }, 500);
+    });
+    
+    function showStatus(message) {
+        statusMessage.style.display = 'block';
+        document.getElementById('statusText').textContent = message;
+        approveBtn.disabled = true;
+        rejectBtn.disabled = true;
+        approveBtn.style.opacity = '0.5';
+        rejectBtn.style.opacity = '0.5';
+        approveBtn.style.cursor = 'wait';
+        rejectBtn.style.cursor = 'wait';
+    }
+    
+    // Add hover effects
+    [approveBtn, rejectBtn].forEach(btn => {
+        btn.addEventListener('mouseover', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-3px)';
+                this.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+            }
+        });
+        btn.addEventListener('mouseout', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+});
+</script>
+
+{% endblock %}
